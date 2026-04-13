@@ -29,6 +29,12 @@ export default function Home() {
               Browse by Service
             </Link>
             <Link
+              href="#industries"
+              className="bg-white/10 hover:bg-white/20 text-white font-medium px-8 py-3 rounded-lg transition-colors text-base backdrop-blur-sm border border-white/20"
+            >
+              Browse by Industry
+            </Link>
+            <Link
               href="#cities"
               className="bg-white/10 hover:bg-white/20 text-white font-medium px-8 py-3 rounded-lg transition-colors text-base backdrop-blur-sm border border-white/20"
             >
