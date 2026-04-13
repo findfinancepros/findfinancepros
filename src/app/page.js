@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProfessionalCard from '@/components/ProfessionalCard';
-import { professionals, cities, services } from '@/data/directory';
+import { professionals, cities, services, industries } from '@/data/directory';
 
 export default function Home() {
   const featured = professionals.filter((p) => p.featured);
@@ -77,8 +77,32 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Industries */}
+      <section id="industries" className="py-16 md:py-20">
+        <div className="max-w-6xl mx-auto px-6">
+          <h2 className="font-display text-3xl text-brand-950 mb-2">Browse by Industry</h2>
+          <p className="text-brand-600 font-body mb-8">Find finance professionals with expertise in your sector</p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {industries.map((industry) => (
+              <Link
+                key={industry.slug}
+                href={`/industry/${industry.slug}`}
+                className="group p-6 bg-warm-50 rounded-xl border border-warm-100 card-hover"
+              >
+                <h3 className="font-display text-lg text-brand-950 mb-2 group-hover:text-brand-600 transition-colors">
+                  {industry.label}
+                </h3>
+                <p className="text-sm text-brand-700 leading-relaxed line-clamp-3">
+                  {industry.description}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Cities */}
-      <section id="cities" className="py-16 md:py-20">
+      <section id="cities" className="py-16 md:py-20 bg-white">
         <div className="max-w-6xl mx-auto px-6">
           <h2 className="font-display text-3xl text-brand-950 mb-2">Browse by City</h2>
           <p className="text-brand-600 font-body mb-8">Finance professionals in major markets across North America</p>
