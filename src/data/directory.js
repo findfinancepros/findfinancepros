@@ -158,3 +158,22 @@ export const services = [
   { slug: "tax-advisory", label: "Tax Advisory", description: "Strategic tax planning and compliance services for businesses and their owners." },
   { slug: "cfo-search", label: "CFO Search & Recruiting", description: "Executive search services to find permanent or interim CFOs and senior finance talent." },
 ];
+
+export const industries = [
+  { slug: "manufacturing", label: "Manufacturing", description: "Financial services for manufacturers including cost accounting, inventory management, and operational efficiency consulting." },
+  { slug: "technology", label: "Technology", description: "Finance and accounting support for tech companies from startups to scale-ups, including SaaS metrics, burn rate management, and venture reporting." },
+  { slug: "saas", label: "SaaS", description: "Specialized financial services for Software-as-a-Service companies including ARR tracking, churn analysis, and subscription revenue recognition." },
+  { slug: "healthcare", label: "Healthcare", description: "Accounting and CFO services for healthcare providers, clinics, and medical practices with industry-specific compliance expertise." },
+  { slug: "professional-services", label: "Professional Services", description: "Finance support for consulting firms, law practices, and other professional service organizations focused on utilization and profitability." },
+  { slug: "private-equity", label: "Private Equity", description: "Financial advisory for PE-backed portfolio companies including deal support, reporting packages, and value creation planning." },
+  { slug: "energy", label: "Energy", description: "Accounting and CFO services for oil and gas, renewable energy, and utilities companies with sector-specific regulatory knowledge." },
+  { slug: "construction", label: "Construction", description: "Financial services for contractors and construction firms including job costing, WIP reporting, and bonding support." },
+  { slug: "retail", label: "Retail", description: "Finance and accounting for retail businesses covering inventory management, margin analysis, and multi-location reporting." },
+  { slug: "ecommerce", label: "E-Commerce", description: "Financial services for online sellers including marketplace accounting, sales tax compliance, and unit economics analysis." },
+  { slug: "real-estate", label: "Real Estate", description: "Accounting and advisory for real estate developers, investors, and property managers with expertise in deal structuring and fund reporting." },
+  { slug: "hospitality", label: "Hospitality", description: "Finance support for hotels, restaurants, and hospitality businesses including RevPAR analysis, labor cost management, and seasonal forecasting." },
+  { slug: "fintech", label: "Fintech", description: "Financial services for fintech companies navigating regulatory compliance, payment processing accounting, and rapid-growth financial management." },
+  { slug: "life-sciences", label: "Life Sciences", description: "Accounting and CFO services for biotech, pharmaceutical, and medical device companies including R&D capitalization and clinical trial budgeting." },
+  { slug: "senior-living", label: "Senior Living", description: "Financial services for senior care facilities including occupancy-based reporting, regulatory compliance, and multi-facility consolidation." },
+  { slug: "agriculture", label: "Agriculture", description: "Accounting and financial advisory for farms, agribusinesses, and food producers with expertise in commodity accounting and seasonal cash flow." },
+];

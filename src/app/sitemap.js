@@ -1,4 +1,4 @@
-import { professionals, cities, services } from '@/data/directory';
+import { professionals, cities, services, industries } from '@/data/directory';
 
 export default function sitemap() {
   const baseUrl = 'https://findfinancepros.com';
@@ -26,6 +26,13 @@ export default function sitemap() {
     priority: 0.8,
   }));
 
+  const industryPages = industries.map((industry) => ({
+    url: `${baseUrl}/industry/${industry.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }));
+
   const professionalPages = professionals.map((pro) => ({
     url: `${baseUrl}/professional/${pro.slug}`,
     lastModified: new Date(),
@@ -33,5 +40,5 @@ export default function sitemap() {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...cityPages, ...servicePages, ...professionalPages];
+  return [...staticPages, ...cityPages, ...servicePages, ...industryPages, ...professionalPages];
 }
