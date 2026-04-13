@@ -36,7 +36,7 @@ export default function Home() {
             </Link>
             <Link
               href="#cities"
-              className="bg-white/10 hover:bg-white/20 text-white font-medium px-8 py-3 rounded-lg transition-colors text-base backdrop-blur-sm border border-white/20"
+              className="bg-warm-500 hover:bg-warm-600 text-white font-medium px-8 py-3 rounded-lg transition-colors text-base"
             >
               Browse by City
             </Link>
