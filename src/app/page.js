@@ -38,28 +38,8 @@ export default async function Home() {
           <p className="font-body text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-8 fade-in stagger-1">
             Browse fractional CFOs, FP&A consultants, controllers, and bookkeeping firms across Canada and the United States.
           </p>
-          <div className="max-w-xl mx-auto mb-8 fade-in stagger-2">
+          <div className="max-w-xl mx-auto fade-in stagger-2">
             <SearchBar />
-          </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center fade-in stagger-2">
-            <Link
-              href="/get-matched"
-              className="bg-warm-500 hover:bg-warm-600 text-white font-medium px-8 py-3 rounded-lg transition-colors text-base"
-            >
-              Get Matched
-            </Link>
-            <Link
-              href="#services"
-              className="bg-white/10 hover:bg-white/20 text-white font-medium px-8 py-3 rounded-lg transition-colors text-base backdrop-blur-sm border border-white/20"
-            >
-              Browse by Service
-            </Link>
-            <Link
-              href="#cities"
-              className="bg-white/10 hover:bg-white/20 text-white font-medium px-8 py-3 rounded-lg transition-colors text-base backdrop-blur-sm border border-white/20"
-            >
-              Browse by City
-            </Link>
           </div>
         </div>
       </section>
