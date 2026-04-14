@@ -25,6 +25,31 @@ export default async function Home() {
   const featuredSlugs = new Set(featured.map((f) => f.slug));
   const recent = allFirms.filter((p) => !featuredSlugs.has(p.slug)).slice(0, 4);
 
+  // Stats derived from active firms
+  const firmCount = allFirms.length;
+  const citySet = new Set(allFirms.map((f) => f.city).filter(Boolean));
+  const countrySet = new Set(allFirms.map((f) => f.country).filter(Boolean));
+  const cityCount = citySet.size;
+  const countryCount = countrySet.size;
+
+  // Firm counts per taxonomy slug
+  const cityFirmCounts = allFirms.reduce((acc, f) => {
+    if (f.city) acc[f.city] = (acc[f.city] || 0) + 1;
+    return acc;
+  }, {});
+  const serviceFirmCounts = allFirms.reduce((acc, f) => {
+    (f.services || []).forEach((s) => {
+      acc[s] = (acc[s] || 0) + 1;
+    });
+    return acc;
+  }, {});
+  const industryFirmCounts = allFirms.reduce((acc, f) => {
+    (f.industries || []).forEach((s) => {
+      acc[s] = (acc[s] || 0) + 1;
+    });
+    return acc;
+  }, {});
+
   return (
     <>
       <Navbar />
@@ -40,6 +65,38 @@ export default async function Home() {
           </p>
           <div className="max-w-xl mx-auto fade-in stagger-2">
             <SearchBar />
+          </div>
+        </div>
+      </section>
+
+      {/* Stats Bar */}
+      <section className="bg-warm-50 border-y border-warm-100 py-8 md:py-10">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="grid grid-cols-3 gap-4 md:gap-8 text-center">
+            <div>
+              <div className="font-display text-3xl md:text-5xl text-warm-600 mb-1">
+                {firmCount}+
+              </div>
+              <div className="text-xs md:text-sm uppercase tracking-wider text-brand-600 font-medium">
+                Finance Professionals
+              </div>
+            </div>
+            <div className="border-x border-warm-200">
+              <div className="font-display text-3xl md:text-5xl text-warm-600 mb-1">
+                {cityCount}
+              </div>
+              <div className="text-xs md:text-sm uppercase tracking-wider text-brand-600 font-medium">
+                {cityCount === 1 ? 'City' : 'Cities'}
+              </div>
+            </div>
+            <div>
+              <div className="font-display text-3xl md:text-5xl text-warm-600 mb-1">
+                {countryCount}
+              </div>
+              <div className="text-xs md:text-sm uppercase tracking-wider text-brand-600 font-medium">
+                {countryCount === 1 ? 'Country' : 'Countries'}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -65,20 +122,28 @@ export default async function Home() {
           <h2 className="font-display text-3xl text-brand-950 mb-2">Browse by Service</h2>
           <p className="text-brand-600 font-body mb-8">Find the right type of finance support for your business</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {services.map((service) => (
-              <Link
-                key={service.slug}
-                href={`/service/${service.slug}`}
-                className="group p-6 bg-warm-50 rounded-xl border border-warm-100 card-hover"
-              >
-                <h3 className="font-display text-lg text-brand-950 mb-2 group-hover:text-brand-600 transition-colors">
-                  {service.label}
-                </h3>
-                <p className="text-sm text-brand-700 leading-relaxed line-clamp-3">
-                  {service.description}
-                </p>
-              </Link>
-            ))}
+            {services.map((service) => {
+              const count = serviceFirmCounts[service.slug] || 0;
+              return (
+                <Link
+                  key={service.slug}
+                  href={`/service/${service.slug}`}
+                  className="group p-6 bg-warm-50 rounded-xl border border-warm-100 card-hover"
+                >
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <h3 className="font-display text-lg text-brand-950 group-hover:text-brand-600 transition-colors">
+                      {service.label}
+                    </h3>
+                    <span className="text-xs font-medium text-warm-700 bg-white border border-warm-200 rounded-full px-2 py-0.5 whitespace-nowrap">
+                      {count} firm{count === 1 ? '' : 's'}
+                    </span>
+                  </div>
+                  <p className="text-sm text-brand-700 leading-relaxed line-clamp-3">
+                    {service.description}
+                  </p>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -89,20 +154,28 @@ export default async function Home() {
           <h2 className="font-display text-3xl text-brand-950 mb-2">Browse by Industry</h2>
           <p className="text-brand-600 font-body mb-8">Find finance professionals with expertise in your sector</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {industries.map((industry) => (
-              <Link
-                key={industry.slug}
-                href={`/industry/${industry.slug}`}
-                className="group p-6 bg-warm-50 rounded-xl border border-warm-100 card-hover"
-              >
-                <h3 className="font-display text-lg text-brand-950 mb-2 group-hover:text-brand-600 transition-colors">
-                  {industry.label}
-                </h3>
-                <p className="text-sm text-brand-700 leading-relaxed line-clamp-3">
-                  {industry.description}
-                </p>
-              </Link>
-            ))}
+            {industries.map((industry) => {
+              const count = industryFirmCounts[industry.slug] || 0;
+              return (
+                <Link
+                  key={industry.slug}
+                  href={`/industry/${industry.slug}`}
+                  className="group p-6 bg-warm-50 rounded-xl border border-warm-100 card-hover"
+                >
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <h3 className="font-display text-lg text-brand-950 group-hover:text-brand-600 transition-colors">
+                      {industry.label}
+                    </h3>
+                    <span className="text-xs font-medium text-warm-700 bg-white border border-warm-200 rounded-full px-2 py-0.5 whitespace-nowrap">
+                      {count} firm{count === 1 ? '' : 's'}
+                    </span>
+                  </div>
+                  <p className="text-sm text-brand-700 leading-relaxed line-clamp-3">
+                    {industry.description}
+                  </p>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -118,16 +191,22 @@ export default async function Home() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {cities
                 .filter((c) => c.country === 'Canada')
-                .map((city) => (
-                  <Link
-                    key={city.slug}
-                    href={`/city/${city.slug}`}
-                    className="bg-white rounded-lg px-5 py-3 border border-brand-100 hover:border-brand-300 hover:shadow-md transition-all text-sm font-medium text-brand-800"
-                  >
-                    {city.label}
-                    <span className="text-brand-400 ml-1 text-xs">{city.province}</span>
-                  </Link>
-                ))}
+                .map((city) => {
+                  const count = cityFirmCounts[city.slug] || 0;
+                  return (
+                    <Link
+                      key={city.slug}
+                      href={`/city/${city.slug}`}
+                      className="bg-white rounded-lg px-5 py-3 border border-brand-100 hover:border-brand-300 hover:shadow-md transition-all text-sm font-medium text-brand-800 flex items-center justify-between gap-2"
+                    >
+                      <span>
+                        {city.label}
+                        <span className="text-brand-400 ml-1 text-xs">{city.province}</span>
+                      </span>
+                      <span className="text-xs text-warm-600 font-semibold">{count}</span>
+                    </Link>
+                  );
+                })}
             </div>
           </div>
 
@@ -136,16 +215,22 @@ export default async function Home() {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {cities
                 .filter((c) => c.country === 'United States')
-                .map((city) => (
-                  <Link
-                    key={city.slug}
-                    href={`/city/${city.slug}`}
-                    className="bg-white rounded-lg px-5 py-3 border border-brand-100 hover:border-brand-300 hover:shadow-md transition-all text-sm font-medium text-brand-800"
-                  >
-                    {city.label}
-                    <span className="text-brand-400 ml-1 text-xs">{city.province}</span>
-                  </Link>
-                ))}
+                .map((city) => {
+                  const count = cityFirmCounts[city.slug] || 0;
+                  return (
+                    <Link
+                      key={city.slug}
+                      href={`/city/${city.slug}`}
+                      className="bg-white rounded-lg px-5 py-3 border border-brand-100 hover:border-brand-300 hover:shadow-md transition-all text-sm font-medium text-brand-800 flex items-center justify-between gap-2"
+                    >
+                      <span>
+                        {city.label}
+                        <span className="text-brand-400 ml-1 text-xs">{city.province}</span>
+                      </span>
+                      <span className="text-xs text-warm-600 font-semibold">{count}</span>
+                    </Link>
+                  );
+                })}
             </div>
           </div>
         </div>

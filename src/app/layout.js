@@ -1,4 +1,5 @@
 import './globals.css';
+import BackToTop from '@/components/BackToTop';
 
 export const metadata = {
   title: {
@@ -16,6 +17,9 @@ export const metadata = {
     'Canada',
     'United States',
   ],
+  icons: {
+    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+  },
   openGraph: {
     title: 'FindFinancePros — Find Trusted Finance Professionals',
     description:
@@ -34,7 +38,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        {children}
+        <BackToTop />
+      </body>
     </html>
   );
 }

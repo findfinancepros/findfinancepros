@@ -26,6 +26,7 @@ function rowToFirm(row, serviceMap = null) {
     featured: row.plan === 'featured' || row.priority_score >= 100,
     plan: row.plan,
     priorityScore: row.priority_score,
+    createdAt: row.created_at,
     serviceLabels,
   };
 }
