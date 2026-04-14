@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProfessionalCard from '@/components/ProfessionalCard';
+import Pagination, { getPaginationSlice } from '@/components/Pagination';
 import {
   getAllServices,
   getServiceBySlug,
@@ -27,13 +28,29 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default async function ServicePage({ params }) {
+export default async function ServicePage({ params, searchParams }) {
   const [service, pros, cities] = await Promise.all([
     getServiceBySlug(params.slug),
     getFirmsByService(params.slug),
     getAllCities(),
   ]);
   if (!service) return notFound();
+
+  const basePath = `/service/${params.slug}`;
+  const {
+    slice: pageItems,
+    currentPage,
+    totalPages,
+    total,
+    start,
+    end,
+  } = getPaginationSlice(pros, searchParams?.page, 12);
+  const prevUrl =
+    currentPage > 1
+      ? `${basePath}${currentPage - 1 > 1 ? `?page=${currentPage - 1}` : ''}`
+      : null;
+  const nextUrl =
+    currentPage < totalPages ? `${basePath}?page=${currentPage + 1}` : null;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -58,6 +75,8 @@ export default async function ServicePage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      {prevUrl && <link rel="prev" href={prevUrl} />}
+      {nextUrl && <link rel="next" href={nextUrl} />}
       <Navbar />
 
       <section className="hero-gradient text-white py-14 md:py-20">
@@ -80,11 +99,22 @@ export default async function ServicePage({ params }) {
       <section className="py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-6">
           {pros.length > 0 ? (
-            <div className="grid md:grid-cols-2 gap-6">
-              {pros.map((pro) => (
-                <ProfessionalCard key={pro.slug} pro={pro} />
-              ))}
-            </div>
+            <>
+              <p className="text-brand-600 font-body text-sm mb-6">
+                Showing {start + 1}-{end} of {total} professional
+                {total !== 1 ? 's' : ''}
+              </p>
+              <div className="grid md:grid-cols-2 gap-6">
+                {pageItems.map((pro) => (
+                  <ProfessionalCard key={pro.slug} pro={pro} />
+                ))}
+              </div>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                basePath={basePath}
+              />
+            </>
           ) : (
             <div className="text-center py-16">
               <h2 className="font-display text-2xl text-brand-950 mb-3">

@@ -1,13 +1,25 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <nav className="bg-brand-950 text-white">
+    <nav
+      className={`bg-brand-950 text-white sticky top-0 z-50 transition-shadow duration-200 ${
+        scrolled ? 'shadow-lg shadow-black/20' : ''
+      }`}
+    >
       <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
         <Link href="/" className="font-display text-xl tracking-tight">
           Find<span className="text-warm-300">Finance</span>Pros
