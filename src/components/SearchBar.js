@@ -4,7 +4,12 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 
-export default function SearchBar({ className = '', placeholder = 'Search firms, cities, services...' }) {
+export default function SearchBar({
+  className = '',
+  placeholder = 'Search firms, cities, services...',
+  compact = false,
+  limit = 8,
+}) {
   const router = useRouter();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
@@ -40,7 +45,7 @@ export default function SearchBar({ className = '', placeholder = 'Search firms,
         .or(`name.ilike.${pattern},city_label.ilike.${pattern},description.ilike.${pattern}`)
         .order('priority_score', { ascending: false })
         .order('name', { ascending: true })
-        .limit(8);
+        .limit(limit);
       setLoading(false);
       if (!error) {
         setResults(data || []);
@@ -61,15 +66,38 @@ export default function SearchBar({ className = '', placeholder = 'Search firms,
   return (
     <div ref={boxRef} className={`relative ${className}`}>
       <form onSubmit={onSubmit}>
-        <input
-          type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onFocus={() => query.trim() && setOpen(true)}
-          placeholder={placeholder}
-          className="w-full bg-white/95 text-brand-900 placeholder-brand-400 rounded-lg px-5 py-3 border border-white/30 focus:outline-none focus:ring-2 focus:ring-warm-400"
-          aria-label="Search firms"
-        />
+        {compact ? (
+          <div className="relative">
+            <svg
+              className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-brand-500 pointer-events-none"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M10.5 17a6.5 6.5 0 100-13 6.5 6.5 0 000 13z" />
+            </svg>
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={() => query.trim() && setOpen(true)}
+              placeholder={placeholder}
+              className="w-full bg-white/90 text-brand-900 placeholder-brand-500 rounded-lg pl-9 pr-3 py-1.5 text-sm border border-white/30 focus:outline-none focus:ring-2 focus:ring-warm-400 focus:bg-white"
+              aria-label="Search firms"
+            />
+          </div>
+        ) : (
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onFocus={() => query.trim() && setOpen(true)}
+            placeholder={placeholder}
+            className="w-full bg-white/95 text-brand-900 placeholder-brand-400 rounded-lg px-5 py-3 border border-white/30 focus:outline-none focus:ring-2 focus:ring-warm-400"
+            aria-label="Search firms"
+          />
+        )}
       </form>
 
       {open && (
