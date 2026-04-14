@@ -2,15 +2,24 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { blogPosts, getPostBySlug, blogCategories } from '@/data/blog';
-import { services, cities, industries } from '@/data/directory';
+import {
+  getAllBlogPosts,
+  getBlogPostBySlug,
+  blogCategories,
+  getAllServices,
+  getAllCities,
+  getAllIndustries,
+} from '@/lib/data';
 
-export function generateStaticParams() {
-  return blogPosts.map((p) => ({ slug: p.slug }));
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const posts = await getAllBlogPosts();
+  return posts.map((p) => ({ slug: p.slug }));
 }
 
-export function generateMetadata({ params }) {
-  const post = getPostBySlug(params.slug);
+export async function generateMetadata({ params }) {
+  const post = await getBlogPostBySlug(params.slug);
   if (!post) return {};
   const url = `https://findfinancepros.com/blog/${post.slug}`;
   return {
@@ -36,8 +45,13 @@ function formatDate(iso) {
   });
 }
 
-export default function BlogPostPage({ params }) {
-  const post = getPostBySlug(params.slug);
+export default async function BlogPostPage({ params }) {
+  const [post, services, cities, industries] = await Promise.all([
+    getBlogPostBySlug(params.slug),
+    getAllServices(),
+    getAllCities(),
+    getAllIndustries(),
+  ]);
   if (!post) return notFound();
 
   const category = blogCategories[post.category];
@@ -188,7 +202,7 @@ export default function BlogPostPage({ params }) {
           </p>
           <div className="flex flex-wrap justify-center gap-3">
             <Link
-              href="/#contact"
+              href="/get-matched"
               className="bg-warm-500 hover:bg-warm-600 text-white font-medium px-8 py-3 rounded-lg transition-colors"
             >
               Get Matched

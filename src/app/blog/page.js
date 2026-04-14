@@ -1,7 +1,9 @@
 import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { getSortedPosts, blogCategories } from '@/data/blog';
+import { getAllBlogPosts, blogCategories } from '@/lib/data';
+
+export const revalidate = 3600;
 
 export const metadata = {
   title: 'Blog — Guides & Insights for Finance Leaders',
@@ -25,8 +27,8 @@ function formatDate(iso) {
   });
 }
 
-export default function BlogIndexPage() {
-  const posts = getSortedPosts();
+export default async function BlogIndexPage() {
+  const posts = await getAllBlogPosts();
 
   return (
     <>

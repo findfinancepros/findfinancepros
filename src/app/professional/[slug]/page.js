@@ -1,15 +1,18 @@
 import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { professionals, services as allServices } from '@/data/directory';
+import { getAllFirms, getFirmBySlug } from '@/lib/data';
 import Link from 'next/link';
 
-export function generateStaticParams() {
-  return professionals.map((p) => ({ slug: p.slug }));
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const firms = await getAllFirms();
+  return firms.map((p) => ({ slug: p.slug }));
 }
 
-export function generateMetadata({ params }) {
-  const pro = professionals.find((p) => p.slug === params.slug);
+export async function generateMetadata({ params }) {
+  const pro = await getFirmBySlug(params.slug);
   if (!pro) return {};
 
   return {
@@ -18,16 +21,11 @@ export function generateMetadata({ params }) {
   };
 }
 
-export default function ProfessionalPage({ params }) {
-  const pro = professionals.find((p) => p.slug === params.slug);
+export default async function ProfessionalPage({ params }) {
+  const pro = await getFirmBySlug(params.slug);
   if (!pro) return notFound();
 
-  const serviceLabels = pro.services
-    .map((s) => {
-      const found = allServices.find((svc) => svc.slug === s);
-      return found ? { slug: found.slug, label: found.label } : null;
-    })
-    .filter(Boolean);
+  const serviceLabels = pro.serviceLabels || [];
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -140,12 +138,12 @@ export default function ProfessionalPage({ params }) {
                       LinkedIn Profile
                     </a>
                   )}
-                  <a
-                    href={`mailto:fahad@findfinancepros.com?subject=Inquiry%20about%20${encodeURIComponent(pro.name)}`}
+                  <Link
+                    href={`/get-matched?firm=${encodeURIComponent(pro.slug)}`}
                     className="block w-full text-center bg-warm-500 hover:bg-warm-600 text-white font-medium px-6 py-3 rounded-lg transition-colors text-sm"
                   >
                     Request Introduction
-                  </a>
+                  </Link>
                 </div>
               </div>
 
