@@ -64,15 +64,12 @@ function buildConfirmationHtml(lead) {
       <p style="margin:0 0 14px;line-height:1.6;font-size:15px">
         Thanks for reaching out. We&rsquo;ve received your request and a member of our team will review your details and be in touch within 24 hours with a shortlist of finance professionals matched to your needs.
       </p>
-      <p style="margin:0 0 14px;line-height:1.6;font-size:15px">
-        If anything is time-sensitive, just reply to this email and we&rsquo;ll prioritise it.
-      </p>
       <p style="margin:24px 0 0;line-height:1.6;font-size:15px">
         — The FindFinancePros Team
       </p>
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:28px 0 16px" />
       <p style="margin:0;font-size:12px;color:#64748b">
-        FindFinancePros &middot; Matching Canadian businesses with trusted finance professionals.
+        FindFinancePros &middot; Matching businesses across Canada and the United States with trusted finance professionals.
       </p>
     </div>
   </body>
