@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import ProfessionalCard from '@/components/ProfessionalCard';
+import FirmGrid from '@/components/FirmGrid';
 import {
   getAllCities,
   getCityBySlug,
@@ -78,11 +78,7 @@ export default async function CityPage({ params }) {
       <section className="py-12 md:py-16">
         <div className="max-w-6xl mx-auto px-6">
           {pros.length > 0 ? (
-            <div className="grid md:grid-cols-2 gap-6">
-              {pros.map((pro) => (
-                <ProfessionalCard key={pro.slug} pro={pro} />
-              ))}
-            </div>
+            <FirmGrid pros={pros} />
           ) : (
             <div className="text-center py-16">
               <h2 className="font-display text-2xl text-brand-950 mb-3">No listings in {city.label} yet</h2>
