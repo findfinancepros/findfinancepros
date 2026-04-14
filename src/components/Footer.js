@@ -12,6 +12,9 @@ export default function Footer() {
             <p className="text-sm leading-relaxed">
               The directory for fractional CFOs, FP&A consultants, controllers, and bookkeeping firms across Canada and the United States.
             </p>
+            <div className="mt-4 space-y-2 text-sm">
+              <Link href="/blog" className="block hover:text-warm-300 transition-colors">Blog</Link>
+            </div>
           </div>
 
           <div>

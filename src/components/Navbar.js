@@ -18,6 +18,7 @@ export default function Navbar() {
           <Link href="/#services" className="hover:text-warm-300 transition-colors">Services</Link>
           <Link href="/#industries" className="hover:text-warm-300 transition-colors">Industries</Link>
           <Link href="/#cities" className="hover:text-warm-300 transition-colors">Cities</Link>
+          <Link href="/blog" className="hover:text-warm-300 transition-colors">Blog</Link>
           <Link
             href="/#contact"
             className="bg-warm-500 hover:bg-warm-600 text-white px-5 py-2 rounded-lg transition-colors font-medium"
@@ -48,6 +49,7 @@ export default function Navbar() {
           <Link href="/#services" className="block hover:text-warm-300" onClick={() => setOpen(false)}>Services</Link>
           <Link href="/#industries" className="block hover:text-warm-300" onClick={() => setOpen(false)}>Industries</Link>
           <Link href="/#cities" className="block hover:text-warm-300" onClick={() => setOpen(false)}>Cities</Link>
+          <Link href="/blog" className="block hover:text-warm-300" onClick={() => setOpen(false)}>Blog</Link>
           <Link
             href="/#contact"
             className="block bg-warm-500 text-white text-center px-5 py-2 rounded-lg"
