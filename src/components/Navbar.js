@@ -27,9 +27,9 @@ export default function Navbar() {
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-8 text-sm font-body">
-          <Link href="/#services" className="hover:text-warm-300 transition-colors">Services</Link>
-          <Link href="/#industries" className="hover:text-warm-300 transition-colors">Industries</Link>
-          <Link href="/#cities" className="hover:text-warm-300 transition-colors">Cities</Link>
+          <Link href="/services" className="hover:text-warm-300 transition-colors">Services</Link>
+          <Link href="/industries" className="hover:text-warm-300 transition-colors">Industries</Link>
+          <Link href="/cities" className="hover:text-warm-300 transition-colors">Cities</Link>
           <Link href="/blog" className="hover:text-warm-300 transition-colors">Blog</Link>
           <Link
             href="/get-matched"
@@ -58,9 +58,9 @@ export default function Navbar() {
       {/* Mobile menu */}
       {open && (
         <div className="md:hidden px-6 pb-4 space-y-3 text-sm font-body">
-          <Link href="/#services" className="block hover:text-warm-300" onClick={() => setOpen(false)}>Services</Link>
-          <Link href="/#industries" className="block hover:text-warm-300" onClick={() => setOpen(false)}>Industries</Link>
-          <Link href="/#cities" className="block hover:text-warm-300" onClick={() => setOpen(false)}>Cities</Link>
+          <Link href="/services" className="block hover:text-warm-300" onClick={() => setOpen(false)}>Services</Link>
+          <Link href="/industries" className="block hover:text-warm-300" onClick={() => setOpen(false)}>Industries</Link>
+          <Link href="/cities" className="block hover:text-warm-300" onClick={() => setOpen(false)}>Cities</Link>
           <Link href="/blog" className="block hover:text-warm-300" onClick={() => setOpen(false)}>Blog</Link>
           <Link
             href="/get-matched"
