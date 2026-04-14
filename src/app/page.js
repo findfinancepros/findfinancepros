@@ -22,9 +22,6 @@ export default async function Home() {
     getAllIndustries(),
   ]);
 
-  const featuredSlugs = new Set(featured.map((f) => f.slug));
-  const recent = allFirms.filter((p) => !featuredSlugs.has(p.slug)).slice(0, 4);
-
   // Stats derived from active firms
   const firmCount = allFirms.length;
   const citySet = new Set(allFirms.map((f) => f.city).filter(Boolean));
@@ -49,6 +46,21 @@ export default async function Home() {
     });
     return acc;
   }, {});
+
+  // Top industries by firm count
+  const topIndustries = [...industries]
+    .sort((a, b) => (industryFirmCounts[b.slug] || 0) - (industryFirmCounts[a.slug] || 0))
+    .slice(0, 8);
+
+  // Top cities per country by firm count (6 each)
+  const canadaCitiesTop = cities
+    .filter((c) => c.country === 'Canada')
+    .sort((a, b) => (cityFirmCounts[b.slug] || 0) - (cityFirmCounts[a.slug] || 0))
+    .slice(0, 6);
+  const usCitiesTop = cities
+    .filter((c) => c.country === 'United States')
+    .sort((a, b) => (cityFirmCounts[b.slug] || 0) - (cityFirmCounts[a.slug] || 0))
+    .slice(0, 6);
 
   return (
     <>
@@ -154,7 +166,7 @@ export default async function Home() {
           <h2 className="font-display text-3xl text-brand-950 mb-2">Browse by Industry</h2>
           <p className="text-brand-600 font-body mb-8">Find finance professionals with expertise in your sector</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {industries.map((industry) => {
+            {topIndustries.map((industry) => {
               const count = industryFirmCounts[industry.slug] || 0;
               return (
                 <Link
@@ -177,6 +189,14 @@ export default async function Home() {
               );
             })}
           </div>
+          <div className="mt-8 text-center">
+            <Link
+              href="/industries"
+              className="inline-block text-brand-600 hover:text-brand-800 font-medium text-sm"
+            >
+              View All Industries →
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -189,62 +209,54 @@ export default async function Home() {
           <div className="mb-8">
             <h3 className="text-sm uppercase tracking-wider text-brand-500 font-medium mb-4">Canada</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-              {cities
-                .filter((c) => c.country === 'Canada')
-                .map((city) => {
-                  const count = cityFirmCounts[city.slug] || 0;
-                  return (
-                    <Link
-                      key={city.slug}
-                      href={`/city/${city.slug}`}
-                      className="bg-white rounded-lg px-5 py-3 border border-brand-100 hover:border-brand-300 hover:shadow-md transition-all text-sm font-medium text-brand-800 flex items-center justify-between gap-2"
-                    >
-                      <span>
-                        {city.label}
-                        <span className="text-brand-400 ml-1 text-xs">{city.province}</span>
-                      </span>
-                      <span className="text-xs text-warm-600 font-semibold">{count}</span>
-                    </Link>
-                  );
-                })}
+              {canadaCitiesTop.map((city) => {
+                const count = cityFirmCounts[city.slug] || 0;
+                return (
+                  <Link
+                    key={city.slug}
+                    href={`/city/${city.slug}`}
+                    className="bg-white rounded-lg px-5 py-3 border border-brand-100 hover:border-brand-300 hover:shadow-md transition-all text-sm font-medium text-brand-800 flex items-center justify-between gap-2"
+                  >
+                    <span>
+                      {city.label}
+                      <span className="text-brand-400 ml-1 text-xs">{city.province}</span>
+                    </span>
+                    <span className="text-xs text-warm-600 font-semibold">{count}</span>
+                  </Link>
+                );
+              })}
             </div>
           </div>
 
           <div>
             <h3 className="text-sm uppercase tracking-wider text-brand-500 font-medium mb-4">United States</h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-              {cities
-                .filter((c) => c.country === 'United States')
-                .map((city) => {
-                  const count = cityFirmCounts[city.slug] || 0;
-                  return (
-                    <Link
-                      key={city.slug}
-                      href={`/city/${city.slug}`}
-                      className="bg-white rounded-lg px-5 py-3 border border-brand-100 hover:border-brand-300 hover:shadow-md transition-all text-sm font-medium text-brand-800 flex items-center justify-between gap-2"
-                    >
-                      <span>
-                        {city.label}
-                        <span className="text-brand-400 ml-1 text-xs">{city.province}</span>
-                      </span>
-                      <span className="text-xs text-warm-600 font-semibold">{count}</span>
-                    </Link>
-                  );
-                })}
+              {usCitiesTop.map((city) => {
+                const count = cityFirmCounts[city.slug] || 0;
+                return (
+                  <Link
+                    key={city.slug}
+                    href={`/city/${city.slug}`}
+                    className="bg-white rounded-lg px-5 py-3 border border-brand-100 hover:border-brand-300 hover:shadow-md transition-all text-sm font-medium text-brand-800 flex items-center justify-between gap-2"
+                  >
+                    <span>
+                      {city.label}
+                      <span className="text-brand-400 ml-1 text-xs">{city.province}</span>
+                    </span>
+                    <span className="text-xs text-warm-600 font-semibold">{count}</span>
+                  </Link>
+                );
+              })}
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Recent Listings */}
-      <section className="py-16 md:py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="font-display text-3xl text-brand-950 mb-2">Recently Added</h2>
-          <p className="text-brand-600 font-body mb-8">New professionals joining the directory</p>
-          <div className="grid md:grid-cols-2 gap-6">
-            {recent.map((pro) => (
-              <ProfessionalCard key={pro.slug} pro={pro} />
-            ))}
+          <div className="mt-8 text-center">
+            <Link
+              href="/cities"
+              className="inline-block text-brand-600 hover:text-brand-800 font-medium text-sm"
+            >
+              View All Cities →
+            </Link>
           </div>
         </div>
       </section>

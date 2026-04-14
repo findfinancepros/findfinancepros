@@ -26,6 +26,7 @@ export default function Footer() {
               <Link href="/service/bookkeeping" className="block hover:text-warm-300 transition-colors">Bookkeeping</Link>
               <Link href="/service/power-bi-automation" className="block hover:text-warm-300 transition-colors">Power BI & Automation</Link>
               <Link href="/service/quality-of-earnings" className="block hover:text-warm-300 transition-colors">Quality of Earnings</Link>
+              <Link href="/services" className="block text-warm-300 hover:text-warm-200 transition-colors">All Services →</Link>
             </div>
           </div>
 
@@ -38,6 +39,7 @@ export default function Footer() {
               <Link href="/industry/professional-services" className="block hover:text-warm-300 transition-colors">Professional Services</Link>
               <Link href="/industry/real-estate" className="block hover:text-warm-300 transition-colors">Real Estate</Link>
               <Link href="/industry/construction" className="block hover:text-warm-300 transition-colors">Construction</Link>
+              <Link href="/industries" className="block text-warm-300 hover:text-warm-200 transition-colors">All Industries →</Link>
             </div>
           </div>
 
@@ -50,6 +52,7 @@ export default function Footer() {
               <Link href="/city/chicago" className="block hover:text-warm-300 transition-colors">Chicago</Link>
               <Link href="/city/new-york" className="block hover:text-warm-300 transition-colors">New York</Link>
               <Link href="/city/montreal" className="block hover:text-warm-300 transition-colors">Montreal</Link>
+              <Link href="/cities" className="block text-warm-300 hover:text-warm-200 transition-colors">All Cities →</Link>
             </div>
           </div>
         </div>
