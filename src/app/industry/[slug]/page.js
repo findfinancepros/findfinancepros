@@ -2,15 +2,24 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProfessionalCard from '@/components/ProfessionalCard';
-import { professionals, cities, services, industries } from '@/data/directory';
+import {
+  getAllIndustries,
+  getIndustryBySlug,
+  getFirmsByIndustry,
+  getAllCities,
+  getAllServices,
+} from '@/lib/data';
 import Link from 'next/link';
 
-export function generateStaticParams() {
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const industries = await getAllIndustries();
   return industries.map((ind) => ({ slug: ind.slug }));
 }
 
-export function generateMetadata({ params }) {
-  const industry = industries.find((ind) => ind.slug === params.slug);
+export async function generateMetadata({ params }) {
+  const industry = await getIndustryBySlug(params.slug);
   if (!industry) return {};
 
   return {
@@ -19,11 +28,14 @@ export function generateMetadata({ params }) {
   };
 }
 
-export default function IndustryPage({ params }) {
-  const industry = industries.find((ind) => ind.slug === params.slug);
+export default async function IndustryPage({ params }) {
+  const [industry, pros, services, cities] = await Promise.all([
+    getIndustryBySlug(params.slug),
+    getFirmsByIndustry(params.slug),
+    getAllServices(),
+    getAllCities(),
+  ]);
   if (!industry) return notFound();
-
-  const pros = professionals.filter((p) => p.industries.includes(params.slug));
 
   const jsonLd = {
     '@context': 'https://schema.org',

@@ -20,7 +20,7 @@ export default function Navbar() {
           <Link href="/#cities" className="hover:text-warm-300 transition-colors">Cities</Link>
           <Link href="/blog" className="hover:text-warm-300 transition-colors">Blog</Link>
           <Link
-            href="/#contact"
+            href="/get-matched"
             className="bg-warm-500 hover:bg-warm-600 text-white px-5 py-2 rounded-lg transition-colors font-medium"
           >
             Get Matched
@@ -51,7 +51,7 @@ export default function Navbar() {
           <Link href="/#cities" className="block hover:text-warm-300" onClick={() => setOpen(false)}>Cities</Link>
           <Link href="/blog" className="block hover:text-warm-300" onClick={() => setOpen(false)}>Blog</Link>
           <Link
-            href="/#contact"
+            href="/get-matched"
             className="block bg-warm-500 text-white text-center px-5 py-2 rounded-lg"
             onClick={() => setOpen(false)}
           >

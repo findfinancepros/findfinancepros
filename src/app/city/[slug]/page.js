@@ -2,15 +2,23 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProfessionalCard from '@/components/ProfessionalCard';
-import { professionals, cities, services as allServices } from '@/data/directory';
+import {
+  getAllCities,
+  getCityBySlug,
+  getFirmsByCity,
+  getAllServices,
+} from '@/lib/data';
 import Link from 'next/link';
 
-export function generateStaticParams() {
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const cities = await getAllCities();
   return cities.map((city) => ({ slug: city.slug }));
 }
 
-export function generateMetadata({ params }) {
-  const city = cities.find((c) => c.slug === params.slug);
+export async function generateMetadata({ params }) {
+  const city = await getCityBySlug(params.slug);
   if (!city) return {};
 
   return {
@@ -19,13 +27,14 @@ export function generateMetadata({ params }) {
   };
 }
 
-export default function CityPage({ params }) {
-  const city = cities.find((c) => c.slug === params.slug);
+export default async function CityPage({ params }) {
+  const [city, pros, allServices] = await Promise.all([
+    getCityBySlug(params.slug),
+    getFirmsByCity(params.slug),
+    getAllServices(),
+  ]);
   if (!city) return notFound();
 
-  const pros = professionals.filter((p) => p.city === params.slug);
-
-  // Structured data for SEO
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
@@ -81,7 +90,7 @@ export default function CityPage({ params }) {
                 Are you a finance professional in {city.label}? Be the first to list your practice.
               </p>
               <a
-                href="mailto:fahad@findfinancepros.com?subject=List%20My%20Practice%20-%20{city.label}"
+                href={`mailto:fahad@findfinancepros.com?subject=List%20My%20Practice%20-%20${encodeURIComponent(city.label)}`}
                 className="inline-block bg-brand-600 hover:bg-brand-700 text-white font-medium px-8 py-3 rounded-lg transition-colors"
               >
                 List Your Practice

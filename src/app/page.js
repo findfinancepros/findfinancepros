@@ -2,11 +2,28 @@ import Link from 'next/link';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProfessionalCard from '@/components/ProfessionalCard';
-import { professionals, cities, services, industries } from '@/data/directory';
+import SearchBar from '@/components/SearchBar';
+import {
+  getAllFirms,
+  getFeaturedFirms,
+  getAllCities,
+  getAllServices,
+  getAllIndustries,
+} from '@/lib/data';
 
-export default function Home() {
-  const featured = professionals.filter((p) => p.featured);
-  const recent = professionals.filter((p) => !p.featured).slice(0, 4);
+export const revalidate = 3600;
+
+export default async function Home() {
+  const [featured, allFirms, cities, services, industries] = await Promise.all([
+    getFeaturedFirms(),
+    getAllFirms(),
+    getAllCities(),
+    getAllServices(),
+    getAllIndustries(),
+  ]);
+
+  const featuredSlugs = new Set(featured.map((f) => f.slug));
+  const recent = allFirms.filter((p) => !featuredSlugs.has(p.slug)).slice(0, 4);
 
   return (
     <>
@@ -18,25 +35,28 @@ export default function Home() {
           <h1 className="font-display text-4xl md:text-6xl leading-tight mb-6 fade-in">
             Find the Right <span className="text-warm-300">Finance Professional</span> for Your Business
           </h1>
-          <p className="font-body text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-10 fade-in stagger-1">
+          <p className="font-body text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-8 fade-in stagger-1">
             Browse fractional CFOs, FP&A consultants, controllers, and bookkeeping firms across Canada and the United States.
           </p>
+          <div className="max-w-xl mx-auto mb-8 fade-in stagger-2">
+            <SearchBar />
+          </div>
           <div className="flex flex-col sm:flex-row gap-4 justify-center fade-in stagger-2">
             <Link
-              href="#services"
+              href="/get-matched"
               className="bg-warm-500 hover:bg-warm-600 text-white font-medium px-8 py-3 rounded-lg transition-colors text-base"
+            >
+              Get Matched
+            </Link>
+            <Link
+              href="#services"
+              className="bg-white/10 hover:bg-white/20 text-white font-medium px-8 py-3 rounded-lg transition-colors text-base backdrop-blur-sm border border-white/20"
             >
               Browse by Service
             </Link>
             <Link
-              href="#industries"
-              className="bg-white/10 hover:bg-white/20 text-white font-medium px-8 py-3 rounded-lg transition-colors text-base backdrop-blur-sm border border-white/20"
-            >
-              Browse by Industry
-            </Link>
-            <Link
               href="#cities"
-              className="bg-warm-500 hover:bg-warm-600 text-white font-medium px-8 py-3 rounded-lg transition-colors text-base"
+              className="bg-white/10 hover:bg-white/20 text-white font-medium px-8 py-3 rounded-lg transition-colors text-base backdrop-blur-sm border border-white/20"
             >
               Browse by City
             </Link>
@@ -173,12 +193,12 @@ export default function Home() {
           <p className="text-white/80 font-body mb-8 text-lg">
             Tell us about your business and we will match you with the right expert. Free, no obligation.
           </p>
-          <a
-            href="mailto:fahad@findfinancepros.com?subject=Get%20Matched%20Request"
+          <Link
+            href="/get-matched"
             className="inline-block bg-warm-500 hover:bg-warm-600 text-white font-medium px-10 py-4 rounded-lg transition-colors text-base"
           >
-            Contact Us to Get Matched
-          </a>
+            Get Matched
+          </Link>
         </div>
       </section>
 

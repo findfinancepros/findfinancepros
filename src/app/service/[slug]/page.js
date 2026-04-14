@@ -2,15 +2,23 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import ProfessionalCard from '@/components/ProfessionalCard';
-import { professionals, cities, services } from '@/data/directory';
+import {
+  getAllServices,
+  getServiceBySlug,
+  getFirmsByService,
+  getAllCities,
+} from '@/lib/data';
 import Link from 'next/link';
 
-export function generateStaticParams() {
+export const revalidate = 3600;
+
+export async function generateStaticParams() {
+  const services = await getAllServices();
   return services.map((s) => ({ slug: s.slug }));
 }
 
-export function generateMetadata({ params }) {
-  const service = services.find((s) => s.slug === params.slug);
+export async function generateMetadata({ params }) {
+  const service = await getServiceBySlug(params.slug);
   if (!service) return {};
 
   return {
@@ -19,11 +27,13 @@ export function generateMetadata({ params }) {
   };
 }
 
-export default function ServicePage({ params }) {
-  const service = services.find((s) => s.slug === params.slug);
+export default async function ServicePage({ params }) {
+  const [service, pros, cities] = await Promise.all([
+    getServiceBySlug(params.slug),
+    getFirmsByService(params.slug),
+    getAllCities(),
+  ]);
   if (!service) return notFound();
-
-  const pros = professionals.filter((p) => p.services.includes(params.slug));
 
   const jsonLd = {
     '@context': 'https://schema.org',

@@ -1,27 +1,34 @@
-import { professionals, cities, services, industries } from '@/data/directory';
-import { blogPosts } from '@/data/blog';
+import {
+  getAllFirms,
+  getAllCities,
+  getAllServices,
+  getAllIndustries,
+  getAllBlogPosts,
+} from '@/lib/data';
 
-export default function sitemap() {
+export const revalidate = 3600;
+
+export default async function sitemap() {
   const baseUrl = 'https://findfinancepros.com';
 
+  const [firms, cities, services, industries, posts] = await Promise.all([
+    getAllFirms(),
+    getAllCities(),
+    getAllServices(),
+    getAllIndustries(),
+    getAllBlogPosts(),
+  ]);
+
   const staticPages = [
-    {
-      url: baseUrl,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.7,
-    },
+    { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
+    { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${baseUrl}/search`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.5 },
+    { url: `${baseUrl}/get-matched`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
   ];
 
-  const blogPages = blogPosts.map((post) => ({
+  const blogPages = posts.map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
-    lastModified: new Date(post.date),
+    lastModified: post.date ? new Date(post.date) : new Date(),
     changeFrequency: 'monthly',
     priority: 0.6,
   }));
@@ -47,7 +54,7 @@ export default function sitemap() {
     priority: 0.8,
   }));
 
-  const professionalPages = professionals.map((pro) => ({
+  const professionalPages = firms.map((pro) => ({
     url: `${baseUrl}/professional/${pro.slug}`,
     lastModified: new Date(),
     changeFrequency: 'monthly',

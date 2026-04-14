@@ -1,10 +1,7 @@
 import Link from 'next/link';
-import { services as allServices } from '@/data/directory';
 
 export default function ProfessionalCard({ pro }) {
-  const serviceLabels = pro.services
-    .map((s) => allServices.find((svc) => svc.slug === s)?.label)
-    .filter(Boolean);
+  const labels = (pro.serviceLabels || []).map((s) => s.label);
 
   return (
     <Link href={`/professional/${pro.slug}`} className="block">
@@ -23,7 +20,7 @@ export default function ProfessionalCard({ pro }) {
           {pro.description}
         </p>
         <div className="flex flex-wrap gap-2">
-          {serviceLabels.slice(0, 3).map((label) => (
+          {labels.slice(0, 3).map((label) => (
             <span
               key={label}
               className="text-xs bg-brand-50 text-brand-700 px-3 py-1 rounded-full border border-brand-100"
@@ -31,9 +28,9 @@ export default function ProfessionalCard({ pro }) {
               {label}
             </span>
           ))}
-          {serviceLabels.length > 3 && (
+          {labels.length > 3 && (
             <span className="text-xs text-brand-400 px-2 py-1">
-              +{serviceLabels.length - 3} more
+              +{labels.length - 3} more
             </span>
           )}
         </div>
