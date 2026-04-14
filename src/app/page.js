@@ -28,9 +28,8 @@ export default async function Home() {
   // Stats derived from active firms
   const firmCount = allFirms.length;
   const citySet = new Set(allFirms.map((f) => f.city).filter(Boolean));
-  const countrySet = new Set(allFirms.map((f) => f.country).filter(Boolean));
   const cityCount = citySet.size;
-  const countryCount = countrySet.size;
+  const industryCount = industries.length;
 
   // Firm counts per taxonomy slug
   const cityFirmCounts = allFirms.reduce((acc, f) => {
@@ -91,10 +90,10 @@ export default async function Home() {
             </div>
             <div>
               <div className="font-display text-3xl md:text-5xl text-warm-600 mb-1">
-                {countryCount}
+                {industryCount}
               </div>
               <div className="text-xs md:text-sm uppercase tracking-wider text-brand-600 font-medium">
-                {countryCount === 1 ? 'Country' : 'Countries'}
+                Industries Served
               </div>
             </div>
           </div>
