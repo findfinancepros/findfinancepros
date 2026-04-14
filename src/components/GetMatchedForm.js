@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { submitLead } from '@/lib/data';
 
 export default function GetMatchedForm({ services, cities }) {
   const searchParams = useSearchParams();
@@ -30,20 +29,28 @@ export default function GetMatchedForm({ services, cities }) {
     setStatus('submitting');
     setErrorMsg('');
     try {
-      await submitLead({
-        name,
-        email,
-        phone,
-        company,
-        message: [
-          firmSlug ? `Referred from firm: ${firmSlug}` : null,
-          message || null,
-        ]
-          .filter(Boolean)
-          .join('\n\n'),
-        city,
-        servicesNeeded: selectedServices,
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          company,
+          message: [
+            firmSlug ? `Referred from firm: ${firmSlug}` : null,
+            message || null,
+          ]
+            .filter(Boolean)
+            .join('\n\n'),
+          city,
+          servicesNeeded: selectedServices,
+        }),
       });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        throw new Error(data.error || 'Something went wrong. Please try again.');
+      }
       setStatus('success');
     } catch (err) {
       setStatus('error');
