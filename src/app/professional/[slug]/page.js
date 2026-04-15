@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { getAllFirms, getFirmBySlug } from '@/lib/data';
+import { getAllFirms, getFirmBySlug, getCityServiceCombinations } from '@/lib/data';
 import Link from 'next/link';
 
 export const revalidate = 3600;
@@ -22,10 +22,14 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ProfessionalPage({ params }) {
-  const pro = await getFirmBySlug(params.slug);
+  const [pro, { byCity }] = await Promise.all([
+    getFirmBySlug(params.slug),
+    getCityServiceCombinations(),
+  ]);
   if (!pro) return notFound();
 
   const serviceLabels = pro.serviceLabels || [];
+  const cityServices = byCity.get(pro.city) || new Set();
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -88,15 +92,20 @@ export default async function ProfessionalPage({ params }) {
 
                 <h3 className="font-display text-xl text-brand-950 mt-8 mb-4">Services</h3>
                 <div className="flex flex-wrap gap-2">
-                  {serviceLabels.map((s) => (
-                    <Link
-                      key={s.slug}
-                      href={`/service/${s.slug}`}
-                      className="text-sm bg-brand-50 text-brand-700 px-4 py-2 rounded-full border border-brand-100 hover:border-brand-300 transition-colors"
-                    >
-                      {s.label}
-                    </Link>
-                  ))}
+                  {serviceLabels.map((s) => {
+                    const href = cityServices.has(s.slug)
+                      ? `/city/${pro.city}/${s.slug}`
+                      : `/service/${s.slug}`;
+                    return (
+                      <Link
+                        key={s.slug}
+                        href={href}
+                        className="text-sm bg-brand-50 text-brand-700 px-4 py-2 rounded-full border border-brand-100 hover:border-brand-300 transition-colors"
+                      >
+                        {s.label}
+                      </Link>
+                    );
+                  })}
                 </div>
 
                 <h3 className="font-display text-xl text-brand-950 mt-8 mb-4">Industries Served</h3>

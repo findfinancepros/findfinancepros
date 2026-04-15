@@ -110,6 +110,56 @@ export async function getFirmsByService(serviceSlug) {
   return enrichFirms(data || []);
 }
 
+export async function getFirmsByCityAndService(citySlug, serviceSlug) {
+  const { data, error } = await supabase
+    .from('firms')
+    .select('*')
+    .eq('status', 'active')
+    .eq('city', citySlug)
+    .contains('services', [serviceSlug])
+    .order('priority_score', { ascending: false })
+    .order('name', { ascending: true });
+  if (error) throw error;
+  return enrichFirms(data || []);
+}
+
+// Returns { combos: Array<{citySlug, serviceSlug, count}>,
+//           byCity: Map<citySlug, Set<serviceSlug>>,
+//           byService: Map<serviceSlug, Set<citySlug>> }
+// Only includes combinations with at least one active firm.
+export async function getCityServiceCombinations() {
+  const { data, error } = await supabase
+    .from('firms')
+    .select('city, services')
+    .eq('status', 'active');
+  if (error) throw error;
+
+  const counts = new Map(); // `${city}|${service}` -> count
+  const byCity = new Map();
+  const byService = new Map();
+
+  for (const row of data || []) {
+    const city = row.city;
+    const services = row.services || [];
+    if (!city || services.length === 0) continue;
+    for (const service of services) {
+      const key = `${city}|${service}`;
+      counts.set(key, (counts.get(key) || 0) + 1);
+      if (!byCity.has(city)) byCity.set(city, new Set());
+      byCity.get(city).add(service);
+      if (!byService.has(service)) byService.set(service, new Set());
+      byService.get(service).add(city);
+    }
+  }
+
+  const combos = Array.from(counts.entries()).map(([key, count]) => {
+    const [citySlug, serviceSlug] = key.split('|');
+    return { citySlug, serviceSlug, count };
+  });
+
+  return { combos, byCity, byService };
+}
+
 export async function getFirmsByIndustry(industrySlug) {
   const { data, error } = await supabase
     .from('firms')

@@ -7,6 +7,7 @@ import {
   getServiceBySlug,
   getFirmsByService,
   getAllCities,
+  getCityServiceCombinations,
 } from '@/lib/data';
 import Link from 'next/link';
 
@@ -28,12 +29,16 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ServicePage({ params }) {
-  const [service, pros, cities] = await Promise.all([
+  const [service, pros, cities, { byService }] = await Promise.all([
     getServiceBySlug(params.slug),
     getFirmsByService(params.slug),
     getAllCities(),
+    getCityServiceCombinations(),
   ]);
   if (!service) return notFound();
+
+  const citySet = byService.get(service.slug) || new Set();
+  const citiesForService = cities.filter((c) => citySet.has(c.slug));
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -101,25 +106,27 @@ export default async function ServicePage({ params }) {
       </section>
 
       {/* Browse by city for this service — internal linking */}
-      <section className="py-12 md:py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="font-display text-2xl text-brand-950 mb-6">
-            Find {service.label} by City
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-            {cities.map((city) => (
-              <Link
-                key={city.slug}
-                href={`/city/${city.slug}`}
-                className="bg-warm-50 rounded-lg px-5 py-3 border border-warm-100 hover:border-warm-300 transition-all text-sm font-medium text-brand-800"
-              >
-                {city.label}
-                <span className="text-brand-400 ml-1 text-xs">{city.province}</span>
-              </Link>
-            ))}
+      {citiesForService.length > 0 && (
+        <section className="py-12 md:py-16 bg-white">
+          <div className="max-w-6xl mx-auto px-6">
+            <h2 className="font-display text-2xl text-brand-950 mb-6">
+              Find {service.label} by City
+            </h2>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {citiesForService.map((city) => (
+                <Link
+                  key={city.slug}
+                  href={`/city/${city.slug}/${service.slug}`}
+                  className="bg-warm-50 rounded-lg px-5 py-3 border border-warm-100 hover:border-warm-300 transition-all text-sm font-medium text-brand-800"
+                >
+                  {city.label}
+                  <span className="text-brand-400 ml-1 text-xs">{city.province}</span>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <Footer />
     </>
