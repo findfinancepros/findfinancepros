@@ -4,6 +4,7 @@ import {
   getAllServices,
   getAllIndustries,
   getAllBlogPosts,
+  getCityServiceCombinations,
 } from '@/lib/data';
 
 export const revalidate = 3600;
@@ -11,12 +12,13 @@ export const revalidate = 3600;
 export default async function sitemap() {
   const baseUrl = 'https://findfinancepros.com';
 
-  const [firms, cities, services, industries, posts] = await Promise.all([
+  const [firms, cities, services, industries, posts, { combos }] = await Promise.all([
     getAllFirms(),
     getAllCities(),
     getAllServices(),
     getAllIndustries(),
     getAllBlogPosts(),
+    getCityServiceCombinations(),
   ]);
 
   const staticPages = [
@@ -61,5 +63,12 @@ export default async function sitemap() {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...cityPages, ...servicePages, ...industryPages, ...professionalPages, ...blogPages];
+  const cityServicePages = combos.map((c) => ({
+    url: `${baseUrl}/city/${c.citySlug}/${c.serviceSlug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  }));
+
+  return [...staticPages, ...cityPages, ...servicePages, ...industryPages, ...cityServicePages, ...professionalPages, ...blogPages];
 }

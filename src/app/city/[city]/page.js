@@ -7,6 +7,7 @@ import {
   getCityBySlug,
   getFirmsByCity,
   getAllServices,
+  getCityServiceCombinations,
 } from '@/lib/data';
 import Link from 'next/link';
 
@@ -14,11 +15,11 @@ export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const cities = await getAllCities();
-  return cities.map((city) => ({ slug: city.slug }));
+  return cities.map((city) => ({ city: city.slug }));
 }
 
 export async function generateMetadata({ params }) {
-  const city = await getCityBySlug(params.slug);
+  const city = await getCityBySlug(params.city);
   if (!city) return {};
 
   return {
@@ -28,12 +29,16 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function CityPage({ params }) {
-  const [city, pros, allServices] = await Promise.all([
-    getCityBySlug(params.slug),
-    getFirmsByCity(params.slug),
+  const [city, pros, allServices, { byCity }] = await Promise.all([
+    getCityBySlug(params.city),
+    getFirmsByCity(params.city),
     getAllServices(),
+    getCityServiceCombinations(),
   ]);
   if (!city) return notFound();
+
+  const serviceSet = byCity.get(city.slug) || new Set();
+  const servicesInCity = allServices.filter((s) => serviceSet.has(s.slug));
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -96,26 +101,27 @@ export default async function CityPage({ params }) {
         </div>
       </section>
 
-      {/* Related services section for internal linking */}
-      <section className="py-12 md:py-16 bg-white">
-        <div className="max-w-6xl mx-auto px-6">
-          <h2 className="font-display text-2xl text-brand-950 mb-6">
-            Finance Services in {city.label}
-          </h2>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {allServices.slice(0, 4).map((service) => (
-              <Link
-                key={service.slug}
-                href={`/service/${service.slug}`}
-                className="p-4 bg-warm-50 rounded-lg border border-warm-100 hover:border-warm-300 transition-all text-sm"
-              >
-                <span className="font-medium text-brand-800">{service.label}</span>
-                <span className="text-brand-500 block mt-1">in {city.label}</span>
-              </Link>
-            ))}
+      {servicesInCity.length > 0 && (
+        <section className="py-12 md:py-16 bg-white">
+          <div className="max-w-6xl mx-auto px-6">
+            <h2 className="font-display text-2xl text-brand-950 mb-6">
+              Finance Services in {city.label}
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {servicesInCity.map((service) => (
+                <Link
+                  key={service.slug}
+                  href={`/city/${city.slug}/${service.slug}`}
+                  className="p-4 bg-warm-50 rounded-lg border border-warm-100 hover:border-warm-300 transition-all text-sm"
+                >
+                  <span className="font-medium text-brand-800">{service.label}</span>
+                  <span className="text-brand-500 block mt-1">in {city.label}</span>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <Footer />
     </>
