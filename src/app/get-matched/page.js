@@ -10,6 +10,7 @@ export const revalidate = 3600;
 export const metadata = {
   title: 'Get Matched with a Finance Professional',
   description: 'Tell us about your business and we will match you with the right fractional CFO, FP&A consultant, controller, or bookkeeper. Free, no obligation.',
+  alternates: { canonical: '/get-matched' },
 };
 
 export default async function GetMatchedPage() {

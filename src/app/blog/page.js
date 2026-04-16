@@ -9,12 +9,12 @@ export const metadata = {
   title: 'Blog — Guides & Insights for Finance Leaders',
   description:
     'Guides, insights, and comparisons to help business owners and finance leaders navigate fractional CFO services, FP&A, controllership, and bookkeeping.',
-  alternates: { canonical: 'https://findfinancepros.com/blog' },
+  alternates: { canonical: '/blog' },
   openGraph: {
     title: 'FindFinancePros Blog',
     description:
       'Guides and insights for business owners hiring finance professionals.',
-    url: 'https://findfinancepros.com/blog',
+    url: 'https://www.findfinancepros.com/blog',
     type: 'website',
   },
 };

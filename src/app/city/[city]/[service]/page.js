@@ -29,6 +29,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `${service.label} in ${city.label}, ${city.province}`,
     description: `Find verified ${service.label.toLowerCase()} professionals in ${city.label}, ${city.province}. Browse firms offering ${service.label.toLowerCase()} services.`,
+    alternates: { canonical: `/city/${city.slug}/${service.slug}` },
   };
 }
 

@@ -4,6 +4,6 @@ export default function robots() {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://findfinancepros.com/sitemap.xml',
+    sitemap: 'https://www.findfinancepros.com/sitemap.xml',
   };
 }

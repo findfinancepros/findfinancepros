@@ -18,6 +18,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `${pro.name} — ${pro.cityLabel}, ${pro.province}`,
     description: pro.description,
+    alternates: { canonical: `/professional/${pro.slug}` },
   };
 }
 

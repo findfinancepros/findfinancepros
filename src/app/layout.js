@@ -2,6 +2,7 @@ import './globals.css';
 import BackToTop from '@/components/BackToTop';
 
 export const metadata = {
+  metadataBase: new URL('https://www.findfinancepros.com'),
   title: {
     default: 'FindFinancePros — Find Trusted Finance Professionals',
     template: '%s | FindFinancePros',
@@ -17,6 +18,9 @@ export const metadata = {
     'Canada',
     'United States',
   ],
+  alternates: {
+    canonical: '/',
+  },
   icons: {
     icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
   },
@@ -24,7 +28,7 @@ export const metadata = {
     title: 'FindFinancePros — Find Trusted Finance Professionals',
     description:
       'Directory of fractional CFOs, FP&A consultants, controllers, and bookkeeping firms across North America.',
-    url: 'https://findfinancepros.com',
+    url: 'https://www.findfinancepros.com',
     siteName: 'FindFinancePros',
     locale: 'en_US',
     type: 'website',
