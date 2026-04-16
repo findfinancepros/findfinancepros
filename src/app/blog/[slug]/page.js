@@ -10,6 +10,7 @@ import {
   getAllCities,
   getAllIndustries,
 } from '@/lib/data';
+import { BlogViewTracker } from '@/components/AnalyticsTracker';
 
 export const revalidate = 3600;
 
@@ -96,6 +97,7 @@ export default async function BlogPostPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <BlogViewTracker slug={post.slug} title={post.title} />
       <Navbar />
 
       <section className="hero-gradient text-white py-14 md:py-20">

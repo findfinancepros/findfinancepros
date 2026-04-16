@@ -3,6 +3,10 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { getAllFirms, getFirmBySlug, getCityServiceCombinations } from '@/lib/data';
 import Link from 'next/link';
+import {
+  FirmProfileViewTracker,
+  ContactLink,
+} from '@/components/AnalyticsTracker';
 
 export const revalidate = 3600;
 
@@ -53,6 +57,11 @@ export default async function ProfessionalPage({ params }) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <FirmProfileViewTracker
+        name={pro.name}
+        city={pro.cityLabel}
+        services={serviceLabels.map((s) => s.slug)}
       />
       <Navbar />
 
@@ -129,24 +138,40 @@ export default async function ProfessionalPage({ params }) {
                 <h3 className="font-display text-lg text-brand-950 mb-4">Get in Touch</h3>
                 <div className="space-y-3">
                   {pro.website && pro.website !== 'https://example.com' && (
-                    <a
+                    <ContactLink
                       href={pro.website}
+                      type="website"
+                      firmName={pro.name}
+                      outbound
+                      outboundLocation="profile_page"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block w-full text-center bg-brand-600 hover:bg-brand-700 text-white font-medium px-6 py-3 rounded-lg transition-colors text-sm"
                     >
                       Visit Website
-                    </a>
+                    </ContactLink>
+                  )}
+                  {pro.email && (
+                    <ContactLink
+                      href={`mailto:${pro.email}`}
+                      type="email"
+                      firmName={pro.name}
+                      className="block w-full text-center bg-warm-600 hover:bg-warm-700 text-white font-medium px-6 py-3 rounded-lg transition-colors text-sm"
+                    >
+                      Email
+                    </ContactLink>
                   )}
                   {pro.linkedin && (
-                    <a
+                    <ContactLink
                       href={pro.linkedin}
+                      type="linkedin"
+                      firmName={pro.name}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="block w-full text-center bg-midnight-700 hover:bg-midnight-800 text-white font-medium px-6 py-3 rounded-lg transition-colors text-sm"
                     >
                       LinkedIn Profile
-                    </a>
+                    </ContactLink>
                   )}
                   <Link
                     href={`/get-matched?firm=${encodeURIComponent(pro.slug)}`}
