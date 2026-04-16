@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { trackSearch } from '@/lib/analytics';
 
 export default function SearchBar({
   className = '',
@@ -59,6 +60,7 @@ export default function SearchBar({
     e.preventDefault();
     const q = query.trim();
     if (!q) return;
+    trackSearch(q, results.length);
     setOpen(false);
     router.push(`/search?q=${encodeURIComponent(q)}`);
   }

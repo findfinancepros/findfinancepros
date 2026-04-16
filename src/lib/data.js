@@ -23,6 +23,8 @@ function rowToFirm(row, serviceMap = null) {
     description: row.description,
     website: row.website,
     linkedin: row.linkedin,
+    email: row.email,
+    phone: row.phone,
     featured: row.plan === 'featured' || row.priority_score >= 100,
     plan: row.plan,
     priorityScore: row.priority_score,

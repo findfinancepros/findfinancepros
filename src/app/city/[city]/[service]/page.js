@@ -11,6 +11,7 @@ import {
   getAllServices,
 } from '@/lib/data';
 import Link from 'next/link';
+import { CategoryPageViewTracker } from '@/components/AnalyticsTracker';
 
 export const revalidate = 3600;
 
@@ -78,6 +79,10 @@ export default async function CityServicePage({ params }) {
 
   return (
     <>
+      <CategoryPageViewTracker
+        type="city_service"
+        slug={`${city.slug}/${service.slug}`}
+      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

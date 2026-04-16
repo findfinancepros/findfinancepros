@@ -1,10 +1,26 @@
+'use client';
+
 import Link from 'next/link';
+import { trackEvent } from '@/lib/analytics';
 
 export default function ProfessionalCard({ pro }) {
   const labels = (pro.serviceLabels || []).map((s) => s.label);
 
+  function handleCardClick() {
+    trackEvent('firm_card_click', {
+      firm_name: pro.name,
+      firm_slug: pro.slug,
+      city: pro.cityLabel,
+      click_location: 'card',
+    });
+  }
+
   return (
-    <Link href={`/professional/${pro.slug}`} className="block">
+    <Link
+      href={`/professional/${pro.slug}`}
+      className="block"
+      onClick={handleCardClick}
+    >
       <div className="bg-white rounded-xl p-6 border border-brand-100 card-hover relative">
         {pro.featured && (
           <span className="absolute top-4 right-4 bg-warm-500 text-white text-xs font-medium px-3 py-1 rounded-full">

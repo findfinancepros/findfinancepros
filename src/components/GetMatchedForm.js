@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { trackFormStart, trackFormSubmission } from '@/lib/analytics';
 
 export default function GetMatchedForm({ services, cities }) {
   const searchParams = useSearchParams();
@@ -16,6 +17,13 @@ export default function GetMatchedForm({ services, cities }) {
   const [selectedServices, setSelectedServices] = useState([]);
   const [status, setStatus] = useState('idle'); // idle | submitting | success | error
   const [errorMsg, setErrorMsg] = useState('');
+
+  const formStartedRef = useRef(false);
+  function handleFormStart() {
+    if (formStartedRef.current) return;
+    formStartedRef.current = true;
+    trackFormStart('get_matched');
+  }
 
   function toggleService(slug) {
     setSelectedServices((prev) =>
@@ -51,6 +59,7 @@ export default function GetMatchedForm({ services, cities }) {
       if (!res.ok || !data.ok) {
         throw new Error(data.error || 'Something went wrong. Please try again.');
       }
+      trackFormSubmission('get_matched');
       setStatus('success');
     } catch (err) {
       setStatus('error');
@@ -70,7 +79,11 @@ export default function GetMatchedForm({ services, cities }) {
   }
 
   return (
-    <form onSubmit={onSubmit} className="bg-white border border-brand-100 rounded-xl p-6 md:p-8 space-y-5">
+    <form
+      onSubmit={onSubmit}
+      onFocus={handleFormStart}
+      className="bg-white border border-brand-100 rounded-xl p-6 md:p-8 space-y-5"
+    >
       <div className="grid sm:grid-cols-2 gap-4">
         <div>
           <label htmlFor="name" className="block text-sm font-medium text-brand-800 mb-1">Name</label>

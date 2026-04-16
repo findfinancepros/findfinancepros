@@ -10,6 +10,7 @@ import {
   getAllServices,
 } from '@/lib/data';
 import Link from 'next/link';
+import { CategoryPageViewTracker } from '@/components/AnalyticsTracker';
 
 export const revalidate = 3600;
 
@@ -61,6 +62,7 @@ export default async function IndustryPage({ params }) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <CategoryPageViewTracker type="industry" slug={industry.slug} />
       <Navbar />
 
       <section className="hero-gradient text-white py-14 md:py-20">
