@@ -11,6 +11,7 @@ export const dynamic = 'force-dynamic';
 export const metadata = {
   title: 'Search Finance Professionals',
   description: 'Search fractional CFOs, FP&A consultants, controllers, and bookkeeping firms across Canada and the United States.',
+  alternates: { canonical: '/search' },
 };
 
 export default async function SearchPage({ searchParams }) {

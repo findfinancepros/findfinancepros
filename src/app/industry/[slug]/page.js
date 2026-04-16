@@ -25,6 +25,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `Finance Firms for ${industry.label}`,
     description: `${industry.description} Browse verified finance professionals serving the ${industry.label.toLowerCase()} industry across Canada and the United States.`,
+    alternates: { canonical: `/industry/${industry.slug}` },
   };
 }
 

@@ -10,7 +10,7 @@ import {
 export const revalidate = 3600;
 
 export default async function sitemap() {
-  const baseUrl = 'https://findfinancepros.com';
+  const baseUrl = 'https://www.findfinancepros.com';
 
   const [firms, cities, services, industries, posts, { combos }] = await Promise.all([
     getAllFirms(),

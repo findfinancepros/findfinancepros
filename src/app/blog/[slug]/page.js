@@ -21,11 +21,11 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }) {
   const post = await getBlogPostBySlug(params.slug);
   if (!post) return {};
-  const url = `https://findfinancepros.com/blog/${post.slug}`;
+  const url = `https://www.findfinancepros.com/blog/${post.slug}`;
   return {
     title: post.title,
     description: post.metaDescription,
-    alternates: { canonical: url },
+    alternates: { canonical: `/blog/${post.slug}` },
     openGraph: {
       title: post.title,
       description: post.metaDescription,
@@ -55,7 +55,7 @@ export default async function BlogPostPage({ params }) {
   if (!post) return notFound();
 
   const category = blogCategories[post.category];
-  const url = `https://findfinancepros.com/blog/${post.slug}`;
+  const url = `https://www.findfinancepros.com/blog/${post.slug}`;
 
   const relatedServices = (post.relatedServices || [])
     .map((slug) => services.find((s) => s.slug === slug))
@@ -81,7 +81,7 @@ export default async function BlogPostPage({ params }) {
     publisher: {
       '@type': 'Organization',
       name: 'FindFinancePros',
-      url: 'https://findfinancepros.com',
+      url: 'https://www.findfinancepros.com',
     },
     mainEntityOfPage: {
       '@type': 'WebPage',

@@ -25,6 +25,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `Finance Professionals in ${city.label}, ${city.province}`,
     description: `Find fractional CFOs, FP&A consultants, controllers, and bookkeeping firms in ${city.label}, ${city.province}. Browse verified finance professionals.`,
+    alternates: { canonical: `/city/${city.slug}` },
   };
 }
 

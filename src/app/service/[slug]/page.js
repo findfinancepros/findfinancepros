@@ -25,6 +25,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `${service.label} Services — Find ${service.label} Professionals`,
     description: `${service.description} Browse verified ${service.label.toLowerCase()} professionals across Canada and the United States.`,
+    alternates: { canonical: `/service/${service.slug}` },
   };
 }
 
