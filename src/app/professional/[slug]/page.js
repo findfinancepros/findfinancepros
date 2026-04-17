@@ -7,6 +7,7 @@ import {
   FirmProfileViewTracker,
   ContactLink,
 } from '@/components/AnalyticsTracker';
+import FirmInquiryForm from '@/components/FirmInquiryForm';
 
 export const revalidate = 3600;
 
@@ -173,12 +174,12 @@ export default async function ProfessionalPage({ params }) {
                       LinkedIn Profile
                     </ContactLink>
                   )}
-                  <Link
-                    href={`/get-matched?firm=${encodeURIComponent(pro.slug)}`}
-                    className="block w-full text-center bg-warm-500 hover:bg-warm-600 text-white font-medium px-6 py-3 rounded-lg transition-colors text-sm"
-                  >
-                    Request Introduction
-                  </Link>
+                  <FirmInquiryForm
+                    firmName={pro.name}
+                    firmSlug={pro.slug}
+                    firmEmail={pro.email || null}
+                    firmCity={pro.cityLabel}
+                  />
                 </div>
               </div>
 
