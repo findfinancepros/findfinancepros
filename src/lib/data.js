@@ -64,13 +64,17 @@ async function enrichFirms(rows) {
 
 // -- Firms --------------------------------------------------------------------
 
+// Supabase / PostgREST caps rows at 1000 by default. Explicit .range() lifts it.
+const MAX_ROWS = 9999;
+
 export async function getAllFirms() {
   const { data, error } = await supabase
     .from('firms')
     .select('*')
     .eq('status', 'active')
     .order('priority_score', { ascending: false })
-    .order('name', { ascending: true });
+    .order('name', { ascending: true })
+    .range(0, MAX_ROWS);
   if (error) throw error;
   return enrichFirms(data || []);
 }
@@ -107,7 +111,8 @@ export async function getFirmsByService(serviceSlug) {
     .eq('status', 'active')
     .contains('services', [serviceSlug])
     .order('priority_score', { ascending: false })
-    .order('name', { ascending: true });
+    .order('name', { ascending: true })
+    .range(0, MAX_ROWS);
   if (error) throw error;
   return enrichFirms(data || []);
 }
@@ -133,7 +138,8 @@ export async function getCityServiceCombinations() {
   const { data, error } = await supabase
     .from('firms')
     .select('city, services')
-    .eq('status', 'active');
+    .eq('status', 'active')
+    .range(0, MAX_ROWS);
   if (error) throw error;
 
   const counts = new Map(); // `${city}|${service}` -> count
@@ -169,7 +175,8 @@ export async function getFirmsByIndustry(industrySlug) {
     .eq('status', 'active')
     .contains('industries', [industrySlug])
     .order('priority_score', { ascending: false })
-    .order('name', { ascending: true });
+    .order('name', { ascending: true })
+    .range(0, MAX_ROWS);
   if (error) throw error;
   return enrichFirms(data || []);
 }

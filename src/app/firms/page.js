@@ -34,7 +34,7 @@ export default async function FirmsPage() {
             Explore all finance professionals listed in our directory across the United States and Canada.
           </p>
           <p className="text-white/60 font-body text-sm mt-3">
-            {pros.length} firm{pros.length !== 1 ? 's' : ''} listed
+            {pros.length.toLocaleString()} firm{pros.length !== 1 ? 's' : ''} listed
           </p>
         </div>
       </section>

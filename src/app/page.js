@@ -86,7 +86,7 @@ export default async function Home() {
           <div className="grid grid-cols-3 gap-4 md:gap-8 text-center">
             <Link href="/firms" className="group">
               <div className="font-display text-3xl md:text-5xl text-warm-600 group-hover:text-warm-700 mb-1 transition-colors">
-                {firmCount}
+                {firmCount.toLocaleString()}
               </div>
               <div className="text-xs md:text-sm uppercase tracking-wider text-brand-600 group-hover:text-brand-800 font-medium transition-colors">
                 Firms
@@ -94,7 +94,7 @@ export default async function Home() {
             </Link>
             <Link href="/cities" className="group border-x border-warm-200">
               <div className="font-display text-3xl md:text-5xl text-warm-600 group-hover:text-warm-700 mb-1 transition-colors">
-                {cityCount}
+                {cityCount.toLocaleString()}
               </div>
               <div className="text-xs md:text-sm uppercase tracking-wider text-brand-600 group-hover:text-brand-800 font-medium transition-colors">
                 {cityCount === 1 ? 'City' : 'Cities'}
@@ -102,7 +102,7 @@ export default async function Home() {
             </Link>
             <Link href="/industries" className="group">
               <div className="font-display text-3xl md:text-5xl text-warm-600 group-hover:text-warm-700 mb-1 transition-colors">
-                {industryCount}
+                {industryCount.toLocaleString()}
               </div>
               <div className="text-xs md:text-sm uppercase tracking-wider text-brand-600 group-hover:text-brand-800 font-medium transition-colors">
                 Industries Served
