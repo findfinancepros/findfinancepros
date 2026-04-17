@@ -43,7 +43,7 @@ export default async function BlogIndexPage() {
             Guides &amp; <span className="text-warm-300">Insights</span>
           </h1>
           <p className="text-white/80 font-body text-lg max-w-2xl">
-            Practical writing for business owners and finance leaders — from hiring a fractional CFO to navigating FP&amp;A, controllership, and bookkeeping.
+            Useful guides for business owners, executives, and sponsors — from hiring a fractional CFO to understanding FP&amp;A, controllership, and bookkeeping.
           </p>
         </div>
       </section>
