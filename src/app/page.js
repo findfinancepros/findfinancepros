@@ -72,7 +72,7 @@ export default async function Home() {
             Find the Right <span className="text-warm-300">Finance Professional</span> for Your Business
           </h1>
           <p className="font-body text-lg md:text-xl text-white/80 max-w-2xl mx-auto mb-8 fade-in stagger-1">
-            Browse fractional CFOs, FP&A consultants, controllers, and bookkeeping firms across Canada and the United States.
+            Browse fractional CFOs, FP&A consultants, controllers, and bookkeeping firms across the United States and Canada.
           </p>
           <div className="max-w-xl mx-auto fade-in stagger-2">
             <SearchBar />

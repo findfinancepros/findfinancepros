@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic';
 
 export const metadata = {
   title: 'Search Finance Professionals',
-  description: 'Search fractional CFOs, FP&A consultants, controllers, and bookkeeping firms across Canada and the United States.',
+  description: 'Search fractional CFOs, FP&A consultants, controllers, and bookkeeping firms across the United States and Canada.',
   alternates: { canonical: '/search' },
 };
 

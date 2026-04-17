@@ -8,7 +8,7 @@ export const revalidate = 3600;
 export const metadata = {
   title: 'All Cities — Browse Finance Professionals by Location',
   description:
-    'Browse finance professionals across every city we cover in Canada and the United States. Fractional CFOs, FP&A consultants, controllers, and bookkeeping firms organized by province and state.',
+    'Browse finance professionals across every city we cover in the United States and Canada. Fractional CFOs, FP&A consultants, controllers, and bookkeeping firms organized by province and state.',
   alternates: { canonical: '/cities' },
 };
 
@@ -49,7 +49,7 @@ export default async function CitiesPage() {
             All <span className="text-warm-300">Cities</span>
           </h1>
           <p className="text-white/80 font-body text-lg">
-            Finance professionals across {cities.length} cities in Canada and the United States
+            Finance professionals across {cities.length} cities in the United States and Canada
           </p>
         </div>
       </section>

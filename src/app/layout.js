@@ -11,7 +11,7 @@ export const metadata = {
     template: '%s | FindFinancePros',
   },
   description:
-    'Find fractional CFOs, FP&A consultants, controllers, and bookkeeping firms across Canada and the United States. Get matched with the right finance professional for your business.',
+    'Find fractional CFOs, FP&A consultants, controllers, and bookkeeping firms across the United States and Canada. Get matched with the right finance professional for your business.',
   keywords: [
     'fractional CFO',
     'FP&A consultant',

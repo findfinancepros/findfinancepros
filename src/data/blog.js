@@ -661,7 +661,7 @@ export const blogPosts = [
       <p>The CFO Centre is the world's largest provider of fractional CFO services with 100+ CFOs across Canada. They accept only the top 1% of CFO applicants and match businesses with a local CFO. Strong for mid-market companies in manufacturing, technology, professional services, and healthcare.</p>
 
       <h3><a href="/professional/the-finance-group">The Finance Group</a></h3>
-      <p>The Finance Group delivers fractional CFO services across Canada and the US using data-driven methods — business diagnostics, strategic planning, operational optimization, and M&amp;A advisory. A good fit for technology and manufacturing businesses with cross-border operations.</p>
+      <p>The Finance Group delivers fractional CFO services across the United States and Canada using data-driven methods — business diagnostics, strategic planning, operational optimization, and M&amp;A advisory. A good fit for technology and manufacturing businesses with cross-border operations.</p>
 
       <h3><a href="/professional/orbit-accountants">Orbit Accountants</a></h3>
       <p>Orbit Accountants offers fractional CFO services with offices in Toronto, Calgary, Ottawa, Vancouver, and Edmonton. Services span financial planning, cash flow optimization, and KPI tracking — attractive for businesses that need consistent coverage across multiple Canadian cities.</p>

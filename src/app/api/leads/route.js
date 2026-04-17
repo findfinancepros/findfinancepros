@@ -69,7 +69,7 @@ function buildConfirmationHtml(lead) {
       </p>
       <hr style="border:none;border-top:1px solid #e5e7eb;margin:28px 0 16px" />
       <p style="margin:0;font-size:12px;color:#64748b">
-        FindFinancePros &middot; Matching businesses across Canada and the United States with trusted finance professionals.
+        FindFinancePros &middot; Matching businesses across the United States and Canada with trusted finance professionals.
       </p>
     </div>
   </body>
