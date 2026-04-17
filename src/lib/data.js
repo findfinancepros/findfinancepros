@@ -64,19 +64,34 @@ async function enrichFirms(rows) {
 
 // -- Firms --------------------------------------------------------------------
 
-// Supabase / PostgREST caps rows at 1000 by default. Explicit .range() lifts it.
-const MAX_ROWS = 9999;
+// Supabase caps every request at 1000 rows (max_rows setting). To get the full
+// set we page through with .range() and stop when a page returns fewer than
+// PAGE_SIZE rows.
+const PAGE_SIZE = 1000;
+
+async function fetchAllPages(applyFilters) {
+  const all = [];
+  let from = 0;
+  while (true) {
+    const to = from + PAGE_SIZE - 1;
+    const query = applyFilters(supabase.from('firms').select('*')).range(from, to);
+    const { data, error } = await query;
+    if (error) throw error;
+    const rows = data || [];
+    all.push(...rows);
+    if (rows.length < PAGE_SIZE) break;
+    from += PAGE_SIZE;
+  }
+  return all;
+}
 
 export async function getAllFirms() {
-  const { data, error } = await supabase
-    .from('firms')
-    .select('*')
-    .eq('status', 'active')
-    .order('priority_score', { ascending: false })
-    .order('name', { ascending: true })
-    .range(0, MAX_ROWS);
-  if (error) throw error;
-  return enrichFirms(data || []);
+  const rows = await fetchAllPages((q) =>
+    q.eq('status', 'active')
+      .order('priority_score', { ascending: false })
+      .order('name', { ascending: true })
+  );
+  return enrichFirms(rows);
 }
 
 export async function getFirmBySlug(slug) {
@@ -105,16 +120,13 @@ export async function getFirmsByCity(citySlug) {
 }
 
 export async function getFirmsByService(serviceSlug) {
-  const { data, error } = await supabase
-    .from('firms')
-    .select('*')
-    .eq('status', 'active')
-    .contains('services', [serviceSlug])
-    .order('priority_score', { ascending: false })
-    .order('name', { ascending: true })
-    .range(0, MAX_ROWS);
-  if (error) throw error;
-  return enrichFirms(data || []);
+  const rows = await fetchAllPages((q) =>
+    q.eq('status', 'active')
+      .contains('services', [serviceSlug])
+      .order('priority_score', { ascending: false })
+      .order('name', { ascending: true })
+  );
+  return enrichFirms(rows);
 }
 
 export async function getFirmsByCityAndService(citySlug, serviceSlug) {
@@ -135,18 +147,28 @@ export async function getFirmsByCityAndService(citySlug, serviceSlug) {
 //           byService: Map<serviceSlug, Set<citySlug>> }
 // Only includes combinations with at least one active firm.
 export async function getCityServiceCombinations() {
-  const { data, error } = await supabase
-    .from('firms')
-    .select('city, services')
-    .eq('status', 'active')
-    .range(0, MAX_ROWS);
-  if (error) throw error;
+  // Page through to avoid the 1000-row cap.
+  const rows = [];
+  let from = 0;
+  while (true) {
+    const to = from + PAGE_SIZE - 1;
+    const { data, error } = await supabase
+      .from('firms')
+      .select('city, services')
+      .eq('status', 'active')
+      .range(from, to);
+    if (error) throw error;
+    const batch = data || [];
+    rows.push(...batch);
+    if (batch.length < PAGE_SIZE) break;
+    from += PAGE_SIZE;
+  }
 
   const counts = new Map(); // `${city}|${service}` -> count
   const byCity = new Map();
   const byService = new Map();
 
-  for (const row of data || []) {
+  for (const row of rows) {
     const city = row.city;
     const services = row.services || [];
     if (!city || services.length === 0) continue;
@@ -169,16 +191,13 @@ export async function getCityServiceCombinations() {
 }
 
 export async function getFirmsByIndustry(industrySlug) {
-  const { data, error } = await supabase
-    .from('firms')
-    .select('*')
-    .eq('status', 'active')
-    .contains('industries', [industrySlug])
-    .order('priority_score', { ascending: false })
-    .order('name', { ascending: true })
-    .range(0, MAX_ROWS);
-  if (error) throw error;
-  return enrichFirms(data || []);
+  const rows = await fetchAllPages((q) =>
+    q.eq('status', 'active')
+      .contains('industries', [industrySlug])
+      .order('priority_score', { ascending: false })
+      .order('name', { ascending: true })
+  );
+  return enrichFirms(rows);
 }
 
 export async function getFeaturedFirms() {
