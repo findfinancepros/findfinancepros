@@ -84,30 +84,30 @@ export default async function Home() {
       <section className="bg-warm-50 border-y border-warm-100 py-8 md:py-10">
         <div className="max-w-5xl mx-auto px-6">
           <div className="grid grid-cols-3 gap-4 md:gap-8 text-center">
-            <div>
-              <div className="font-display text-3xl md:text-5xl text-warm-600 mb-1">
-                {firmCount}+
+            <Link href="/firms" className="group">
+              <div className="font-display text-3xl md:text-5xl text-warm-600 group-hover:text-warm-700 mb-1 transition-colors">
+                {firmCount}
               </div>
-              <div className="text-xs md:text-sm uppercase tracking-wider text-brand-600 font-medium">
-                Finance Professionals
+              <div className="text-xs md:text-sm uppercase tracking-wider text-brand-600 group-hover:text-brand-800 font-medium transition-colors">
+                Firms
               </div>
-            </div>
-            <div className="border-x border-warm-200">
-              <div className="font-display text-3xl md:text-5xl text-warm-600 mb-1">
+            </Link>
+            <Link href="/cities" className="group border-x border-warm-200">
+              <div className="font-display text-3xl md:text-5xl text-warm-600 group-hover:text-warm-700 mb-1 transition-colors">
                 {cityCount}
               </div>
-              <div className="text-xs md:text-sm uppercase tracking-wider text-brand-600 font-medium">
+              <div className="text-xs md:text-sm uppercase tracking-wider text-brand-600 group-hover:text-brand-800 font-medium transition-colors">
                 {cityCount === 1 ? 'City' : 'Cities'}
               </div>
-            </div>
-            <div>
-              <div className="font-display text-3xl md:text-5xl text-warm-600 mb-1">
+            </Link>
+            <Link href="/industries" className="group">
+              <div className="font-display text-3xl md:text-5xl text-warm-600 group-hover:text-warm-700 mb-1 transition-colors">
                 {industryCount}
               </div>
-              <div className="text-xs md:text-sm uppercase tracking-wider text-brand-600 font-medium">
+              <div className="text-xs md:text-sm uppercase tracking-wider text-brand-600 group-hover:text-brand-800 font-medium transition-colors">
                 Industries Served
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </section>
