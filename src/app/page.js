@@ -22,10 +22,10 @@ export default async function Home() {
     getAllIndustries(),
   ]);
 
-  // Stats derived from active firms
+  // Stats — use the cities table as single source of truth so the homepage
+  // and /cities page never drift apart.
   const firmCount = allFirms.length;
-  const citySet = new Set(allFirms.map((f) => f.city).filter(Boolean));
-  const cityCount = citySet.size;
+  const cityCount = cities.length;
   const industryCount = industries.length;
 
   // Firm counts per taxonomy slug

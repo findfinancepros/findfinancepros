@@ -24,15 +24,27 @@ const supabase = createClient(SUPABASE_URL, KEY, {
 async function main() {
   console.log('Syncing cities from firms table...\n');
 
-  // Get all unique city combos from firms
-  const { data: firms, error: firmsErr } = await supabase
-    .from('firms')
-    .select('city, city_label, province, country');
-
-  if (firmsErr) {
-    console.error('Failed to fetch firms:', firmsErr.message);
-    process.exit(1);
+  // Get all unique city combos from active firms.
+  // Supabase caps every request at 1000 rows, so we page through.
+  const firms = [];
+  let from = 0;
+  while (true) {
+    const to = from + 999;
+    const { data, error } = await supabase
+      .from('firms')
+      .select('city, city_label, province, country')
+      .eq('status', 'active')
+      .range(from, to);
+    if (error) {
+      console.error('Failed to fetch firms:', error.message);
+      process.exit(1);
+    }
+    const rows = data || [];
+    firms.push(...rows);
+    if (rows.length < 1000) break;
+    from += 1000;
   }
+  console.log(`Scanned ${firms.length} active firm rows.`);
 
   // Deduplicate by city slug
   const cityMap = new Map();
