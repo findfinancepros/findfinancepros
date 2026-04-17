@@ -285,12 +285,12 @@ export default async function Home() {
           <p className="text-brand-700 font-body mb-8 text-lg leading-relaxed">
             Join the FindFinancePros directory and get discovered by business owners looking for exactly your expertise. Free basic listing included.
           </p>
-          <a
-            href="mailto:fahad@findfinancepros.com?subject=List%20My%20Practice"
+          <Link
+            href="/submit"
             className="inline-block bg-brand-600 hover:bg-brand-700 text-white font-medium px-10 py-4 rounded-lg transition-colors text-base"
           >
-            List Your Practice
-          </a>
+            List Your Firm
+          </Link>
         </div>
       </section>
 
