@@ -7,11 +7,24 @@ import { getAllServices, getAllCities } from '@/lib/data';
 
 export const revalidate = 3600;
 
-export const metadata = {
+// Base metadata (used when no query params — the canonical variant).
+const BASE_METADATA = {
   title: 'Get Matched with a Finance Professional',
   description: 'Tell us about your business and we will match you with the right fractional CFO, FP&A consultant, controller, or bookkeeper. Free, no obligation.',
   alternates: { canonical: '/get-matched' },
 };
+
+// generateMetadata runs per-request so we can read searchParams. Query-
+// parameter variants (e.g. /get-matched?firm=xxx) keep the same canonical
+// tag but are marked noindex so Google stops indexing them as separate pages.
+export function generateMetadata({ searchParams }) {
+  const hasParams = searchParams && Object.keys(searchParams).length > 0;
+  if (!hasParams) return BASE_METADATA;
+  return {
+    ...BASE_METADATA,
+    robots: { index: false, follow: true },
+  };
+}
 
 export default async function GetMatchedPage() {
   const [services, cities] = await Promise.all([getAllServices(), getAllCities()]);
