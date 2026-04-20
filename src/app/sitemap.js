@@ -63,12 +63,18 @@ export default async function sitemap() {
     priority: 0.6,
   }));
 
-  const cityServicePages = combos.map((c) => ({
-    url: `${baseUrl}/city/${c.citySlug}/${c.serviceSlug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly',
-    priority: 0.7,
-  }));
+  // Only emit combos whose city and service are registered categories —
+  // otherwise the resulting /city/[city]/[service] page 404s.
+  const citySlugs = new Set(cities.map((c) => c.slug));
+  const serviceSlugs = new Set(services.map((s) => s.slug));
+  const cityServicePages = combos
+    .filter((c) => citySlugs.has(c.citySlug) && serviceSlugs.has(c.serviceSlug))
+    .map((c) => ({
+      url: `${baseUrl}/city/${c.citySlug}/${c.serviceSlug}`,
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    }));
 
   return [...staticPages, ...cityPages, ...servicePages, ...industryPages, ...cityServicePages, ...professionalPages, ...blogPages];
 }

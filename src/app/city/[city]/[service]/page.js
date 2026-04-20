@@ -16,8 +16,18 @@ import { CategoryPageViewTracker } from '@/components/AnalyticsTracker';
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const { combos } = await getCityServiceCombinations();
-  return combos.map((c) => ({ city: c.citySlug, service: c.serviceSlug }));
+  const [{ combos }, cities, services] = await Promise.all([
+    getCityServiceCombinations(),
+    getAllCities(),
+    getAllServices(),
+  ]);
+  // Only pre-render combos whose city and service are registered categories;
+  // orphan firm-service references would otherwise pre-generate 404 pages.
+  const citySlugs = new Set(cities.map((c) => c.slug));
+  const serviceSlugs = new Set(services.map((s) => s.slug));
+  return combos
+    .filter((c) => citySlugs.has(c.citySlug) && serviceSlugs.has(c.serviceSlug))
+    .map((c) => ({ city: c.citySlug, service: c.serviceSlug }));
 }
 
 export async function generateMetadata({ params }) {
