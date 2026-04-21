@@ -36,3 +36,15 @@ next-env.d.ts
 
 # scratch / batch working dirs
 /.scratch/
+
+# Per-batch staging files for the firm-add workflow
+scripts/.dedup.json
+scripts/.batch*-candidates.json
+scripts/.batch*-retries.json
+scripts/.batch*-verified.json
+scripts/.batch*-firm-lines.txt
+scripts/.batch*-backfill*.json
+scripts/.inserted-batch*.json
+scripts/.recent-firms.json
+scripts/.insert-batch.mjs
+scripts/.verify-and-fetch.mjs
