@@ -51,6 +51,20 @@ export default async function Home() {
     .sort((a, b) => (industryFirmCounts[b.slug] || 0) - (industryFirmCounts[a.slug] || 0))
     .slice(0, 8);
 
+  // Featured services — fixed order, shown on the homepage. /services still lists all.
+  const featuredServiceSlugs = [
+    'audit-assurance',
+    'tax-advisory',
+    'bookkeeping',
+    'fpa-consulting',
+    'fractional-cfo',
+    'controller-services',
+  ];
+  const servicesBySlug = new Map(services.map((s) => [s.slug, s]));
+  const featuredServices = featuredServiceSlugs
+    .map((slug) => servicesBySlug.get(slug))
+    .filter(Boolean);
+
   // Top cities per country by firm count (6 each)
   const canadaCitiesTop = cities
     .filter((c) => c.country === 'Canada')
@@ -133,7 +147,7 @@ export default async function Home() {
           <h2 className="font-display text-3xl text-brand-950 mb-2">Browse by Service</h2>
           <p className="text-brand-600 font-body mb-8">Find the right type of finance support for your business</p>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {services.map((service) => {
+            {featuredServices.map((service) => {
               const count = serviceFirmCounts[service.slug] || 0;
               return (
                 <Link
@@ -155,6 +169,14 @@ export default async function Home() {
                 </Link>
               );
             })}
+          </div>
+          <div className="mt-8 text-center">
+            <Link
+              href="/services"
+              className="inline-block text-brand-600 hover:text-brand-800 font-medium text-sm"
+            >
+              View All Services →
+            </Link>
           </div>
         </div>
       </section>
