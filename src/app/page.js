@@ -59,21 +59,23 @@ export default async function Home() {
     'fpa-consulting',
     'fractional-cfo',
     'controller-services',
+    'quality-of-earnings',
+    'power-bi-automation',
   ];
   const servicesBySlug = new Map(services.map((s) => [s.slug, s]));
   const featuredServices = featuredServiceSlugs
     .map((slug) => servicesBySlug.get(slug))
     .filter(Boolean);
 
-  // Top cities per country by firm count (6 each)
+  // Top cities per country by firm count (4 each)
   const canadaCitiesTop = cities
     .filter((c) => c.country === 'Canada')
     .sort((a, b) => (cityFirmCounts[b.slug] || 0) - (cityFirmCounts[a.slug] || 0))
-    .slice(0, 6);
+    .slice(0, 4);
   const usCitiesTop = cities
     .filter((c) => c.country === 'United States')
     .sort((a, b) => (cityFirmCounts[b.slug] || 0) - (cityFirmCounts[a.slug] || 0))
-    .slice(0, 6);
+    .slice(0, 4);
 
   return (
     <>
