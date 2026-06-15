@@ -29,6 +29,7 @@ function rowToFirm(row, serviceMap = null) {
     plan: row.plan,
     priorityScore: row.priority_score,
     createdAt: row.created_at,
+    updatedAt: row.updated_at,
     serviceLabels,
     // Enriched fields (populated by the website-scraping pipeline).
     longDescription: row.long_description || null,

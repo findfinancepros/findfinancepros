@@ -26,6 +26,10 @@ const NAV_TIMEOUT = 18000;       // per-page navigation timeout
 const FIRM_TIMEOUT = 70000;      // hard watchdog: abort a firm that exceeds this total
 const CLOSE_TIMEOUT = 5000;      // cap context.close() so a hung browser can't stall
 const PER_DOMAIN_DELAY = 800;    // politeness between requests to same site
+const STEALTH = args.includes('--stealth'); // present as a real browser; wait out JS bot-challenges
+const IGNORE_ROBOTS = args.includes('--ignore-robots'); // skip robots.txt disallow check (explicit opt-in)
+const CHROME_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
+const CHALLENGE_RE = /just a moment|checking your browser|verifying you are human|sgcaptcha|cf-browser-verification|enable javascript and cookies|attention required|ddos protection|cf_chl/i;
 
 // Close a context without ever blocking forever (hung Chromium can hang .close()).
 function closeQuietly(context) {
@@ -62,7 +66,15 @@ async function getRobots(context, origin) {
 
 async function grabPage(page, url) {
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: NAV_TIMEOUT });
-  await page.waitForTimeout(700); // let lazy content settle
+  await page.waitForTimeout(STEALTH ? 1500 : 700); // let lazy content settle
+  if (STEALTH) {
+    // Give JS bot-challenges (Cloudflare / SiteGround sgcaptcha) time to auto-clear.
+    for (let i = 0; i < 5; i++) {
+      if (!CHALLENGE_RE.test(await page.content())) break;
+      await page.waitForTimeout(2500);
+    }
+    try { await page.waitForLoadState('networkidle', { timeout: 6000 }); } catch {}
+  }
   const html = await page.content();
   return html;
 }
@@ -79,10 +91,26 @@ async function crawlFirm(browser, firm) {
   if (!FORCE) {
     try { await fs.access(`${dir}/meta.json`); return { slug: firm.slug, status: 'cached' }; } catch {}
   }
-  const context = await browser.newContext({
+  const context = await browser.newContext(STEALTH ? {
+    userAgent: CHROME_UA,
+    viewport: { width: 1366, height: 900 },
+    locale: 'en-US',
+    timezoneId: 'America/New_York',
+    extraHTTPHeaders: { 'Accept-Language': 'en-US,en;q=0.9' },
+    ignoreHTTPSErrors: true, // some legit firm sites have expired/misconfigured certs
+  } : {
     userAgent: 'Mozilla/5.0 (compatible; FindFinanceProsBot/1.0; +https://findfinancepros.com/bot)',
     viewport: { width: 1280, height: 900 },
   });
+  if (STEALTH) {
+    // Mask the most obvious automation signals so soft bot-walls let us through.
+    await context.addInitScript(() => {
+      Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+      Object.defineProperty(navigator, 'languages', { get: () => ['en-US', 'en'] });
+      Object.defineProperty(navigator, 'plugins', { get: () => [1, 2, 3, 4, 5] });
+      window.chrome = window.chrome || { runtime: {} };
+    });
+  }
   const pages = {};
   let watchdog;
   const deadline = new Promise((_, reject) => {
@@ -91,8 +119,8 @@ async function crawlFirm(browser, firm) {
   try {
     return await Promise.race([deadline, (async () => {
     const origin = new URL(firm.website).origin;
-    const robots = await getRobots(context, origin);
-    const blocked = (u) => robots && robots.isDisallowed(u, 'FindFinanceProsBot') === true;
+    const robots = IGNORE_ROBOTS ? null : await getRobots(context, origin);
+    const blocked = (u) => !IGNORE_ROBOTS && robots && robots.isDisallowed(u, 'FindFinanceProsBot') === true;
 
     const page = await context.newPage();
     page.setDefaultTimeout(NAV_TIMEOUT);
