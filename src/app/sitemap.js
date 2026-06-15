@@ -58,7 +58,9 @@ export default async function sitemap() {
 
   const professionalPages = firms.map((pro) => ({
     url: `${baseUrl}/professional/${pro.slug}`,
-    lastModified: new Date(),
+    // Use the firm's real last-updated time so Google can tell which pages
+    // actually changed (e.g. the enriched ones) and prioritize re-crawling them.
+    lastModified: pro.updatedAt ? new Date(pro.updatedAt) : new Date(),
     changeFrequency: 'monthly',
     priority: 0.6,
   }));
