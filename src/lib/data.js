@@ -30,6 +30,20 @@ function rowToFirm(row, serviceMap = null) {
     priorityScore: row.priority_score,
     createdAt: row.created_at,
     serviceLabels,
+    // Enriched fields (populated by the website-scraping pipeline).
+    longDescription: row.long_description || null,
+    tagline: row.tagline || null,
+    logoUrl: row.logo_url || null,
+    teamSize: row.team_size || null,
+    yearFounded: row.year_founded || null,
+    certifications: row.certifications || [],
+    languages: row.languages || [],
+    serviceArea: row.service_area || null,
+    minEngagement: row.min_engagement || null,
+    freeConsultation: row.free_consultation === true,
+    acceptsNewClients: row.accepts_new_clients !== false,
+    team: Array.isArray(row.team) ? row.team : [],
+    verifiedWebsite: row.verified_website === true,
   };
 }
 
