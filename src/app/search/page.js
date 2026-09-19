@@ -5,6 +5,7 @@ import ProfessionalCard from '@/components/ProfessionalCard';
 import Pagination, { getPaginationSlice } from '@/components/Pagination';
 import SearchBar from '@/components/SearchBar';
 import { searchFirms } from '@/lib/data';
+import { NOINDEX } from '@/lib/seo';
 
 export const dynamic = 'force-dynamic';
 
@@ -12,6 +13,9 @@ export const metadata = {
   title: 'Search Finance Professionals',
   description: 'Search fractional CFOs, FP&A consultants, controllers, and bookkeeping firms across the United States and Canada.',
   alternates: { canonical: '/search' },
+  // Search results are an unbounded URL space (?q=...) whose content is always
+  // available on a category page instead. Crawl and follow, but don't index.
+  ...NOINDEX,
 };
 
 export default async function SearchPage({ searchParams }) {
