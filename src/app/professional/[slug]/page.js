@@ -9,6 +9,7 @@ import {
   ContactLink,
 } from '@/components/AnalyticsTracker';
 import FirmInquiryForm from '@/components/FirmInquiryForm';
+import { isFirmIndexable, NOINDEX } from '@/lib/seo';
 
 export const revalidate = 3600;
 
@@ -38,6 +39,10 @@ export async function generateMetadata({ params }) {
     title,
     description,
     alternates: { canonical: `/professional/${pro.slug}` },
+    // Un-enriched profiles are contact details in a shared template, with
+    // nothing to distinguish them from each other. Keep them live but out of
+    // the index until the enrichment pipeline fills them in.
+    ...(isFirmIndexable(pro) ? {} : NOINDEX),
     openGraph: {
       title,
       description,

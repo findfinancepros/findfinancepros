@@ -12,6 +12,7 @@ import {
 } from '@/lib/data';
 import Link from 'next/link';
 import { CategoryPageViewTracker } from '@/components/AnalyticsTracker';
+import { isComboIndexable, NOINDEX } from '@/lib/seo';
 
 export const revalidate = 3600;
 
@@ -31,9 +32,10 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }) {
-  const [city, service] = await Promise.all([
+  const [city, service, pros] = await Promise.all([
     getCityBySlug(params.city),
     getServiceBySlug(params.service),
+    getFirmsByCityAndService(params.city, params.service),
   ]);
   if (!city || !service) return {};
 
@@ -41,6 +43,9 @@ export async function generateMetadata({ params }) {
     title: `${service.label} in ${city.label}, ${city.province}`,
     description: `Find verified ${service.label.toLowerCase()} professionals in ${city.label}, ${city.province}. Browse firms offering ${service.label.toLowerCase()} services.`,
     alternates: { canonical: `/city/${city.slug}/${service.slug}` },
+    // Combos with only one or two firms duplicate the parent city page and the
+    // firms' own profiles; keep them live but out of the index.
+    ...(isComboIndexable(pros.length) ? {} : NOINDEX),
   };
 }
 

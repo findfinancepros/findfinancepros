@@ -6,6 +6,7 @@ import {
   getAllBlogPosts,
   getCityServiceCombinations,
 } from '@/lib/data';
+import { isComboIndexable, isFirmIndexable } from '@/lib/seo';
 
 export const revalidate = 3600;
 
@@ -21,11 +22,18 @@ export default async function sitemap() {
     getCityServiceCombinations(),
   ]);
 
+  // The hub pages were previously missing here, so the sitemap never pointed at
+  // the top of each category tree. /search is deliberately absent: it's
+  // noindexed (unbounded ?q= URL space).
   const staticPages = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
+    { url: `${baseUrl}/services`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/cities`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/industries`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${baseUrl}/firms`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
     { url: `${baseUrl}/blog`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.7 },
-    { url: `${baseUrl}/search`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.5 },
     { url: `${baseUrl}/get-matched`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: `${baseUrl}/submit`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.4 },
   ];
 
   const blogPages = posts.map((post) => ({
@@ -56,7 +64,9 @@ export default async function sitemap() {
     priority: 0.8,
   }));
 
-  const professionalPages = firms.map((pro) => ({
+  // Only advertise profiles we actually ask Google to index — a noindexed page
+  // sitting in the sitemap is a contradictory signal.
+  const professionalPages = firms.filter(isFirmIndexable).map((pro) => ({
     url: `${baseUrl}/professional/${pro.slug}`,
     // Use the firm's real last-updated time so Google can tell which pages
     // actually changed (e.g. the enriched ones) and prioritize re-crawling them.
@@ -71,6 +81,8 @@ export default async function sitemap() {
   const serviceSlugs = new Set(services.map((s) => s.slug));
   const cityServicePages = combos
     .filter((c) => citySlugs.has(c.citySlug) && serviceSlugs.has(c.serviceSlug))
+    // Thin combos are noindexed on the page itself; keep the sitemap in step.
+    .filter((c) => isComboIndexable(c.count))
     .map((c) => ({
       url: `${baseUrl}/city/${c.citySlug}/${c.serviceSlug}`,
       lastModified: new Date(),
